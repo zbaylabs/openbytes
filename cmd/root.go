@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	pb "github.com/zbaylab/openbytes/api/go"
-	impl "github.com/zbaylab/openbytes/internal/impl/service"
+	impl "github.com/zbaylab/openbytes/pkg/impl/service"
 	"google.golang.org/grpc"
 )
 

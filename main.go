@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/zbaylab/openbytes/internal/cmd"
+	"github.com/zbaylab/openbytes/cmd"
 )
 
 func main() {

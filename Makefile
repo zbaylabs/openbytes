@@ -12,8 +12,6 @@ LD_FLAGS:=-X main.Version=$(VERSION) -X main.Revision=$(REVISION) -X main.Releas
 prepare:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-#	@-docker swarm init
-#	@-docker network create --driver=overlay devel
 
 generate: generate-go generate-js
 
@@ -25,12 +23,12 @@ generate-js:
 	@$(PROTOC) -I./api api/*.proto \
 	--js_out=import_style=commonjs:api/js \
 	--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:api/js
-	@echo Generate-js2 completely.
+	@echo Generate-js completely.
 
 ui:generate
 	cp -rf api/js/ ui/src/sdk
 	cd ui && npm run build
 
 build:ui
-	cp -rf ui/dist internal/cmd/ && rm -rf internal/cmd/dist/js/*.map
+	cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
 	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE) *.go

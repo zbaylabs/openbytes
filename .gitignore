@@ -1,5 +1,5 @@
 bundles
-internal/cmd/dist
+cmd/dist
 *.db
 .DS_Store
 *.cer
