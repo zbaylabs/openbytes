@@ -6,7 +6,7 @@ import * as grpcWeb from 'grpc-web';
 
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { apiService } from '../api.service';
-import { Packet, Capture } from '../sdk/capture_pb';
+import { Packet, Capture } from '../../../api/js/capture_pb';
 
 const packets = ref<Packet.AsObject[]>([]);
 let stream: grpcWeb.ClientReadableStream<Packet>;

@@ -26,7 +26,7 @@ generate-js:
 	@echo Generate-js completely.
 
 ui:generate
-	cp -rf api/js/ ui/src/sdk
+#	cp -rf api/js/ ui/src/sdk
 	cd ui && npm run build
 
 build:ui

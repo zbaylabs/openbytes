@@ -1,5 +1,5 @@
 //import { AttendantsPromiseClient } from './sdk/attendant_grpc_web_pb';
-import { CapturesClient } from './sdk/capture_grpc_web_pb';
+import { CapturesClient } from '../../api/js/capture_grpc_web_pb';
 
 export class ApiService {
     // opts = { 'streamInterceptors': [new StreamInterceptor()] };;
