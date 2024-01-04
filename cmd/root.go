@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	port    int16
+	port    int
 	rootCmd = &cobra.Command{
-		Use:   "Lanuch gRPC && UI server",
+		Use:   "Launch gRPC && UI server",
 		Short: "",
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -37,7 +37,7 @@ func Execute() {
 
 func init() {
 	log.SetReportCaller(true)
-	rootCmd.PersistentFlags().Int16VarP(&port, "port", "p", 8888, "server port")
+	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 8888, "server port")
 }
 
 //go:embed all:dist
@@ -51,6 +51,7 @@ func startMuxServer() {
 	dist, err := fs.Sub(ui, "dist")
 	if err != nil {
 		log.Fatalf("sub error: %s", err)
+		return
 	}
 	mux.Handle("/", fileServerWithExt(http.FS(dist)))
 	log.Infof("listening: %d", port)
