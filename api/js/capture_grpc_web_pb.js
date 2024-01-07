@@ -19,6 +19,10 @@
 const grpc = {};
 grpc.web = require('grpc-web');
 
+
+var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js')
+
+var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js')
 const proto = {};
 proto.openbytes = require('./capture_pb.js');
 
@@ -71,6 +75,67 @@ proto.openbytes.CapturesPromiseClient =
    */
   this.hostname_ = hostname.replace(/\/+$/, '');
 
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.google.protobuf.Empty,
+ *   !proto.google.protobuf.ListValue>}
+ */
+const methodDescriptor_Captures_Device = new grpc.web.MethodDescriptor(
+  '/openbytes.Captures/Device',
+  grpc.web.MethodType.UNARY,
+  google_protobuf_empty_pb.Empty,
+  google_protobuf_struct_pb.ListValue,
+  /**
+   * @param {!proto.google.protobuf.Empty} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  google_protobuf_struct_pb.ListValue.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.google.protobuf.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.ListValue)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.ListValue>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.openbytes.CapturesClient.prototype.device =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/openbytes.Captures/Device',
+      request,
+      metadata || {},
+      methodDescriptor_Captures_Device,
+      callback);
+};
+
+
+/**
+ * @param {!proto.google.protobuf.Empty} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.google.protobuf.ListValue>}
+ *     Promise that resolves to the response
+ */
+proto.openbytes.CapturesPromiseClient.prototype.device =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/openbytes.Captures/Device',
+      request,
+      metadata || {},
+      methodDescriptor_Captures_Device);
 };
 
 

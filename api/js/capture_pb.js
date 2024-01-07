@@ -21,6 +21,10 @@ var global =
     (function () { return this; }).call(null) ||
     Function('return this')();
 
+var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
+goog.object.extend(proto, google_protobuf_empty_pb);
+var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js');
+goog.object.extend(proto, google_protobuf_struct_pb);
 goog.exportSymbol('proto.openbytes.Address', null, global);
 goog.exportSymbol('proto.openbytes.Capture', null, global);
 goog.exportSymbol('proto.openbytes.Packet', null, global);
@@ -142,7 +146,7 @@ proto.openbytes.Capture.prototype.toObject = function(opt_includeInstance) {
 proto.openbytes.Capture.toObject = function(includeInstance, msg) {
   var f, obj = {
     iface: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    protocal: jspb.Message.getFieldWithDefault(msg, 2, "")
+    protocol: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -185,7 +189,7 @@ proto.openbytes.Capture.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setProtocal(value);
+      msg.setProtocol(value);
       break;
     default:
       reader.skipField();
@@ -223,7 +227,7 @@ proto.openbytes.Capture.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getProtocal();
+  f = message.getProtocol();
   if (f.length > 0) {
     writer.writeString(
       2,
@@ -252,10 +256,10 @@ proto.openbytes.Capture.prototype.setIface = function(value) {
 
 
 /**
- * optional string protocal = 2;
+ * optional string protocol = 2;
  * @return {string}
  */
-proto.openbytes.Capture.prototype.getProtocal = function() {
+proto.openbytes.Capture.prototype.getProtocol = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -264,7 +268,7 @@ proto.openbytes.Capture.prototype.getProtocal = function() {
  * @param {string} value
  * @return {!proto.openbytes.Capture} returns this
  */
-proto.openbytes.Capture.prototype.setProtocal = function(value) {
+proto.openbytes.Capture.prototype.setProtocol = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 

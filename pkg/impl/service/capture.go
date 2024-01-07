@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+	"strings"
 	"time"
 
 	"github.com/google/gopacket"
@@ -8,17 +10,37 @@ import (
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
 	pb "github.com/zbaylab/openbytes/api/go"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type CapturesImpl struct {
 	pb.UnimplementedCapturesServer
 }
 
+func (s *CapturesImpl) Device(context.Context, *emptypb.Empty) (*structpb.ListValue, error) {
+	lv := &structpb.ListValue{}
+	devices, err := pcap.FindAllDevs()
+	if err != nil {
+		log.Errorln(err)
+		return nil, err
+	}
+	// 打印设备信息
+	// fmt.Println("Devices found:")
+	for _, device := range devices {
+		if len(device.Addresses) != 0 && !strings.HasPrefix(device.Name, "lo") {
+			//fmt.Println("\nName: ", device.Name)
+			lv.Values = append(lv.Values, structpb.NewStringValue(device.Name))
+		}
+	}
+	return lv, nil
+}
+
 func (s *CapturesImpl) List(in *pb.Capture, stream pb.Captures_ListServer) error {
 	// Open iface
-	handle, err := pcap.OpenLive("en0", 65535, true, pcap.BlockForever)
+	handle, err := pcap.OpenLive(in.Iface, 65535, true, pcap.BlockForever)
 	if err != nil {
-		log.Fatal(err)
+		log.Errorln(err)
 		return err
 	}
 	defer handle.Close()

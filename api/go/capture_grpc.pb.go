@@ -11,6 +11,8 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	structpb "google.golang.org/protobuf/types/known/structpb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,6 +21,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Captures_Device_FullMethodName  = "/openbytes.Captures/Device"
 	Captures_List_FullMethodName    = "/openbytes.Captures/List"
 	Captures_Traffic_FullMethodName = "/openbytes.Captures/Traffic"
 )
@@ -27,6 +30,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CapturesClient interface {
+	Device(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*structpb.ListValue, error)
 	List(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_ListClient, error)
 	Traffic(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_TrafficClient, error)
 }
@@ -37,6 +41,15 @@ type capturesClient struct {
 
 func NewCapturesClient(cc grpc.ClientConnInterface) CapturesClient {
 	return &capturesClient{cc}
+}
+
+func (c *capturesClient) Device(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*structpb.ListValue, error) {
+	out := new(structpb.ListValue)
+	err := c.cc.Invoke(ctx, Captures_Device_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *capturesClient) List(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_ListClient, error) {
@@ -107,6 +120,7 @@ func (x *capturesTrafficClient) Recv() (*Point, error) {
 // All implementations must embed UnimplementedCapturesServer
 // for forward compatibility
 type CapturesServer interface {
+	Device(context.Context, *emptypb.Empty) (*structpb.ListValue, error)
 	List(*Capture, Captures_ListServer) error
 	Traffic(*Capture, Captures_TrafficServer) error
 	mustEmbedUnimplementedCapturesServer()
@@ -116,6 +130,9 @@ type CapturesServer interface {
 type UnimplementedCapturesServer struct {
 }
 
+func (UnimplementedCapturesServer) Device(context.Context, *emptypb.Empty) (*structpb.ListValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Device not implemented")
+}
 func (UnimplementedCapturesServer) List(*Capture, Captures_ListServer) error {
 	return status.Errorf(codes.Unimplemented, "method List not implemented")
 }
@@ -133,6 +150,24 @@ type UnsafeCapturesServer interface {
 
 func RegisterCapturesServer(s grpc.ServiceRegistrar, srv CapturesServer) {
 	s.RegisterService(&Captures_ServiceDesc, srv)
+}
+
+func _Captures_Device_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CapturesServer).Device(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Captures_Device_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CapturesServer).Device(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Captures_List_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -183,7 +218,12 @@ func (x *capturesTrafficServer) Send(m *Point) error {
 var Captures_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "openbytes.Captures",
 	HandlerType: (*CapturesServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Device",
+			Handler:    _Captures_Device_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "List",

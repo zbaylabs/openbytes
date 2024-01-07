@@ -1,13 +1,15 @@
 import * as jspb from 'google-protobuf'
 
+import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
+import * as google_protobuf_struct_pb from 'google-protobuf/google/protobuf/struct_pb';
 
 
 export class Capture extends jspb.Message {
   getIface(): string;
   setIface(value: string): Capture;
 
-  getProtocal(): string;
-  setProtocal(value: string): Capture;
+  getProtocol(): string;
+  setProtocol(value: string): Capture;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Capture.AsObject;
@@ -20,7 +22,7 @@ export class Capture extends jspb.Message {
 export namespace Capture {
   export type AsObject = {
     iface: string,
-    protocal: string,
+    protocol: string,
   }
 }
 
