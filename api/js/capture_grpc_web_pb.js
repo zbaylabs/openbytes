@@ -130,5 +130,61 @@ proto.openbytes.CapturesPromiseClient.prototype.list =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.openbytes.Capture,
+ *   !proto.openbytes.Point>}
+ */
+const methodDescriptor_Captures_Traffic = new grpc.web.MethodDescriptor(
+  '/openbytes.Captures/Traffic',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.openbytes.Capture,
+  proto.openbytes.Point,
+  /**
+   * @param {!proto.openbytes.Capture} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.openbytes.Point.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.openbytes.Capture} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.openbytes.Point>}
+ *     The XHR Node Readable Stream
+ */
+proto.openbytes.CapturesClient.prototype.traffic =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/openbytes.Captures/Traffic',
+      request,
+      metadata || {},
+      methodDescriptor_Captures_Traffic);
+};
+
+
+/**
+ * @param {!proto.openbytes.Capture} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.openbytes.Point>}
+ *     The XHR Node Readable Stream
+ */
+proto.openbytes.CapturesPromiseClient.prototype.traffic =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/openbytes.Captures/Traffic',
+      request,
+      metadata || {},
+      methodDescriptor_Captures_Traffic);
+};
+
+
 module.exports = proto.openbytes;
 

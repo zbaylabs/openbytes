@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Captures_List_FullMethodName = "/openbytes.Captures/List"
+	Captures_List_FullMethodName    = "/openbytes.Captures/List"
+	Captures_Traffic_FullMethodName = "/openbytes.Captures/Traffic"
 )
 
 // CapturesClient is the client API for Captures service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CapturesClient interface {
 	List(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_ListClient, error)
+	Traffic(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_TrafficClient, error)
 }
 
 type capturesClient struct {
@@ -69,11 +71,44 @@ func (x *capturesListClient) Recv() (*Packet, error) {
 	return m, nil
 }
 
+func (c *capturesClient) Traffic(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_TrafficClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Captures_ServiceDesc.Streams[1], Captures_Traffic_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &capturesTrafficClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Captures_TrafficClient interface {
+	Recv() (*Point, error)
+	grpc.ClientStream
+}
+
+type capturesTrafficClient struct {
+	grpc.ClientStream
+}
+
+func (x *capturesTrafficClient) Recv() (*Point, error) {
+	m := new(Point)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // CapturesServer is the server API for Captures service.
 // All implementations must embed UnimplementedCapturesServer
 // for forward compatibility
 type CapturesServer interface {
 	List(*Capture, Captures_ListServer) error
+	Traffic(*Capture, Captures_TrafficServer) error
 	mustEmbedUnimplementedCapturesServer()
 }
 
@@ -83,6 +118,9 @@ type UnimplementedCapturesServer struct {
 
 func (UnimplementedCapturesServer) List(*Capture, Captures_ListServer) error {
 	return status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedCapturesServer) Traffic(*Capture, Captures_TrafficServer) error {
+	return status.Errorf(codes.Unimplemented, "method Traffic not implemented")
 }
 func (UnimplementedCapturesServer) mustEmbedUnimplementedCapturesServer() {}
 
@@ -118,6 +156,27 @@ func (x *capturesListServer) Send(m *Packet) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _Captures_Traffic_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Capture)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CapturesServer).Traffic(m, &capturesTrafficServer{stream})
+}
+
+type Captures_TrafficServer interface {
+	Send(*Point) error
+	grpc.ServerStream
+}
+
+type capturesTrafficServer struct {
+	grpc.ServerStream
+}
+
+func (x *capturesTrafficServer) Send(m *Point) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // Captures_ServiceDesc is the grpc.ServiceDesc for Captures service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -129,6 +188,11 @@ var Captures_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "List",
 			Handler:       _Captures_List_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "Traffic",
+			Handler:       _Captures_Traffic_Handler,
 			ServerStreams: true,
 		},
 	},

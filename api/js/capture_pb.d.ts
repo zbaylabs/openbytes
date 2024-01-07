@@ -94,3 +94,33 @@ export namespace Address {
   }
 }
 
+export class Point extends jspb.Message {
+  getLabel(): string;
+  setLabel(value: string): Point;
+
+  getTcpCount(): number;
+  setTcpCount(value: number): Point;
+
+  getUdpCount(): number;
+  setUdpCount(value: number): Point;
+
+  getOtherCount(): number;
+  setOtherCount(value: number): Point;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Point.AsObject;
+  static toObject(includeInstance: boolean, msg: Point): Point.AsObject;
+  static serializeBinaryToWriter(message: Point, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Point;
+  static deserializeBinaryFromReader(message: Point, reader: jspb.BinaryReader): Point;
+}
+
+export namespace Point {
+  export type AsObject = {
+    label: string,
+    tcpCount: number,
+    udpCount: number,
+    otherCount: number,
+  }
+}
+

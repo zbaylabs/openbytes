@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/lara-light-green/theme.css'
-import 'primeicons/primeicons.css'
+import { Quasar } from 'quasar'
+import quasarUserOptions from './quasar-user-options'
 
-createApp(App).use(router).use(PrimeVue).mount('#app')
+createApp(App).use(Quasar, quasarUserOptions).use(router).mount('#app')

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import ScrollPanel from 'primevue/scrollpanel';
 import * as grpcWeb from 'grpc-web';
 
 import { ref, onMounted, onBeforeUnmount } from 'vue';
@@ -16,7 +13,9 @@ onMounted(() => {
   stream = apiService.captureClient.list(new Capture());
   stream.on('data', response => {
     console.log(response.toObject());
-    packets.value.push(response.toObject());
+    //packets.value.push(response.toObject());
+    packets.value.splice(0, 0, response.toObject());
+    //items.value.push({});
   });
   stream.on('error', err => {
     console.log(err);
@@ -27,25 +26,26 @@ onBeforeUnmount(() => {
   console.log('begin cancel...');
   stream.cancel;
 })
-
 </script>
 <template>
-  <DataTable :value="packets" tableStyle="min-width: 50rem;overflow: auto;">
-    <Column field="protocol" header="Protocol"></Column>
-    <Column field="layers" header="Layers"></Column>
-    <Column field="src" header="Source">
-      <template #body="slotProps">
-        {{ slotProps.data.src.ip }}:{{ slotProps.data.src.port }}[{{ slotProps.data.src.mac }}]
-      </template>
-    </Column>
-    <Column field="dst" header="Destination">
-      <template #body="slotProps">
-        {{ slotProps.data.dst.ip }}:{{ slotProps.data.dst.port }}[{{ slotProps.data.dst.mac }}]
-      </template>
-    </Column>
-    <!-- <Column field="payload" header="Payload"></Column> -->
-    <Column field="data" header="Data"></Column>
-  </DataTable>
+  <div class="q-pa-md">
+    <q-scroll>
+      <!-- <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner color="primary" name="dots" size="40px" />
+        </div>
+      </template> -->
+
+      <div v-for="(item, index) in packets" :key="index" class="caption q-py-sm">
+        <q-badge class="shadow-1">
+          {{ packets.length - index }}
+        </q-badge>
+        {{ item.data }}
+        <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro.
+        Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore. -->
+      </div>
+    </q-scroll>
+  </div>
 </template>
 
 <style>

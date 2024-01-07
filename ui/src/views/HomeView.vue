@@ -1,94 +1,86 @@
 <template>
-  <!-- <div class="home">
+    <!-- <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
   </div> -->
-  <div class="card">
-        <Chart type="line" :data="chartData" :options="chartOptions" class="h-30rem" />
-    </div>
+    <!-- <Chart type="line" :data="chartData" :options="chartOptions" /> -->
+    <Line v-if="chartData != null" :options="chartOptions" :data="chartData" />
 </template>
 
 <script setup lang="ts">
 import { defineComponent } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
-import Chart from 'primevue/chart';
 
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js'
+import { Line } from 'vue-chartjs';
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+
+import * as grpcWeb from 'grpc-web';
 import { ref, onMounted } from "vue";
+import { apiService } from '../api.service';
+import { Point, Capture } from '../../../api/js/capture_pb';
 
-onMounted(() => {
-    chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
-});
+const points = ref<Point.AsObject[]>([]);
+let stream: grpcWeb.ClientReadableStream<Point>;
 
 const chartData = ref();
 const chartOptions = ref();
-        
-const setChartData = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
 
-    return {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                tension: 0.4,
-                borderColor: documentStyle.getPropertyValue('--blue-500')
-            },
-            {
-                label: 'Second Dataset',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                borderDash: [5, 5],
-                tension: 0.4,
-                borderColor: documentStyle.getPropertyValue('--teal-500')
-            },
-            {
-                label: 'Third Dataset',
-                data: [12, 51, 62, 33, 21, 62, 45],
-                fill: true,
-                borderColor: documentStyle.getPropertyValue('--orange-500'),
-                tension: 0.4,
-                backgroundColor: 'rgba(255,167,38,0.2)'
-            }
-        ]
-    };
-};
-const setChartOptions = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+onMounted(() => {
+    let labels: string[] = [];
+    let tcpCounts = '';
+    let udpCounts = '';
+    let otherCounts = '';
+    let n = 1;
 
-    return {
-       // maintainAspectRatio: false,
-       // aspectRatio: 0.6,
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
+    stream = apiService.captureClient.traffic(new Capture());
+    stream.on('data', response => {
+        // i++;
+        ///console.log(i, 'here-1', response.toObject());
+        labels.push(response.toObject().label);
+        // console.log(i, 'here0', labels);
+
+        tcpCounts = tcpCounts + response.toObject().tcpCount + ','
+        udpCounts = udpCounts + response.toObject().udpCount + ','
+        otherCounts = otherCounts + response.toObject().otherCount + ','
+        let abc = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'TCP',
+                    data: tcpCounts.split(",").map(Number),
+                    fill: true,
+                    tension: 0.4,
+                    //borderColor: documentStyle.getPropertyValue('--orange-500')
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255,167,38,0.2)',
                 },
-                grid: {
-                    color: surfaceBorder
+                {
+                    label: 'UDP',
+                    data: udpCounts.split(",").map(Number),
+                    fill: false,
+                    tension: 0.4,
+                    borderDash: [5, 5],
+                    borderColor: 'rgb(75, 192, 192)'//documentStyle.getPropertyValue('--teal-500')
+                }, {
+                    label: 'Others',
+                    data: otherCounts.split(",").map(Number),
+                    fill: false,
+                    tension: 0.4,
+                    borderColor: 'blue'//documentStyle.getPropertyValue('--blue-500')
                 }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            }
-        }
+            ]
+        };
+        // console.log(i, 'here2', abc);
+        chartData.value = abc;
+    });
+    stream.on('error', err => {
+        console.log(err);
+    });
+
+    chartOptions.value = {
+        animation: false,
+        responsive: true
     };
-}
+});
 </script>

@@ -13,6 +13,11 @@ export class CapturesClient {
     metadata?: grpcWeb.Metadata
   ): grpcWeb.ClientReadableStream<capture_pb.Packet>;
 
+  traffic(
+    request: capture_pb.Capture,
+    metadata?: grpcWeb.Metadata
+  ): grpcWeb.ClientReadableStream<capture_pb.Point>;
+
 }
 
 export class CapturesPromiseClient {
@@ -24,6 +29,11 @@ export class CapturesPromiseClient {
     request: capture_pb.Capture,
     metadata?: grpcWeb.Metadata
   ): grpcWeb.ClientReadableStream<capture_pb.Packet>;
+
+  traffic(
+    request: capture_pb.Capture,
+    metadata?: grpcWeb.Metadata
+  ): grpcWeb.ClientReadableStream<capture_pb.Point>;
 
 }
 

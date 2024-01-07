@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
@@ -54,6 +56,69 @@ func (s *CapturesImpl) List(in *pb.Capture, stream pb.Captures_ListServer) error
 		}
 
 		if err := stream.Send(vPacket); err != nil {
+			log.Errorln(err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+var pointChan = make(chan pb.Point, 100)
+
+func init() {
+	go fetch()
+}
+
+func fetch() {
+	handle, err := pcap.OpenLive("en0", 65535, true, pcap.BlockForever)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer handle.Close()
+	source := gopacket.NewPacketSource(handle, handle.LinkType())
+	ticker := time.NewTicker(time.Second * 1)
+	tcpCount, udpCount, otherCount := 0, 0, 0
+	comeIn := false
+	for packet := range source.Packets() {
+		if tcpLayer := packet.Layer(layers.LayerTypeTCP); tcpLayer != nil {
+			tcpCount++
+		} else if udpLayer := packet.Layer(layers.LayerTypeUDP); udpLayer != nil {
+			udpCount++
+		} else {
+			otherCount++
+		}
+		go func() {
+			if !comeIn {
+				for _ = range ticker.C {
+					//println("test")
+					pointChan <- pb.Point{
+						Label:      time.Now().Format(time.TimeOnly),
+						TcpCount:   int32(tcpCount),
+						UdpCount:   int32(udpCount),
+						OtherCount: int32(otherCount),
+					}
+					tcpCount = 0
+					udpCount = 0
+					otherCount = 0
+					comeIn = false
+				}
+			}
+		}()
+	}
+}
+
+func (s *CapturesImpl) Traffic(in *pb.Capture, stream pb.Captures_TrafficServer) error {
+	// values := []pb.Point{
+	// 	{Label: "2021", Protocol: "tcp", Count: 20},
+	// 	{Label: "2022", Count: 60},
+	// 	{Label: "202301", Count: 31},
+	// 	{Label: "202302", Count: 42},
+	// 	{Label: "202303", Count: 40},
+	// 	{Label: "2024", Count: 51}}
+
+	for v := range pointChan {
+		if err := stream.Send(&v); err != nil {
 			log.Errorln(err)
 			return err
 		}

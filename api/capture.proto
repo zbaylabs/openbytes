@@ -9,6 +9,7 @@ syntax = "proto3";
 
 service Captures {
   rpc List(Capture) returns (stream Packet) {}
+  rpc Traffic(Capture) returns (stream Point) {}
 }
 
 message Capture {
@@ -30,4 +31,17 @@ message Address {
   string ip = 1;
   int32 port = 2;
   string mac = 3;
+}
+
+message Point {
+  string label = 1;
+  // string protocol = 2;
+  int32 tcp_count = 2;
+  int32 udp_count = 3;
+  int32 other_count = 4;
+  // PacketType pt = 2;
+  // message PacketType {
+  //   string protocol = 1;
+  //   repeated int32 count = 2;
+  // }
 }
