@@ -49,7 +49,7 @@ const options = ref<string[]>([]);
 
 function start() {
   if (capture.value.iface == '') {
-    $q.notify({ message: 'select iface firstly', position: 'top-right', color: 'primary', icon: 'warning' });
+    $q.notify({ message: 'select iface', position: 'top-right', color: 'primary', icon: 'warning' });
   } else {
     $q.notify({ message: 'start capture', position: 'top-right', color: 'primary', icon: 'info' });
     packets.value = [];

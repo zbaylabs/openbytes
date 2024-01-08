@@ -25,11 +25,9 @@ func (s *CapturesImpl) Device(context.Context, *emptypb.Empty) (*structpb.ListVa
 		log.Errorln(err)
 		return nil, err
 	}
-	// 打印设备信息
-	// fmt.Println("Devices found:")
+
 	for _, device := range devices {
 		if len(device.Addresses) > 0 && !strings.HasPrefix(device.Name, "lo") {
-			//fmt.Println("\nName: ", device.Name)
 			lv.Values = append(lv.Values, structpb.NewStringValue(device.Name))
 		}
 	}
