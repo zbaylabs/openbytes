@@ -146,7 +146,7 @@ proto.openbytes.Capture.prototype.toObject = function(opt_includeInstance) {
 proto.openbytes.Capture.toObject = function(includeInstance, msg) {
   var f, obj = {
     iface: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    protocol: jspb.Message.getFieldWithDefault(msg, 2, "")
+    filter: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -189,7 +189,7 @@ proto.openbytes.Capture.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setProtocol(value);
+      msg.setFilter(value);
       break;
     default:
       reader.skipField();
@@ -227,7 +227,7 @@ proto.openbytes.Capture.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getProtocol();
+  f = message.getFilter();
   if (f.length > 0) {
     writer.writeString(
       2,
@@ -256,10 +256,10 @@ proto.openbytes.Capture.prototype.setIface = function(value) {
 
 
 /**
- * optional string protocol = 2;
+ * optional string filter = 2;
  * @return {string}
  */
-proto.openbytes.Capture.prototype.getProtocol = function() {
+proto.openbytes.Capture.prototype.getFilter = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -268,7 +268,7 @@ proto.openbytes.Capture.prototype.getProtocol = function() {
  * @param {string} value
  * @return {!proto.openbytes.Capture} returns this
  */
-proto.openbytes.Capture.prototype.setProtocol = function(value) {
+proto.openbytes.Capture.prototype.setFilter = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 

@@ -8,8 +8,8 @@ export class Capture extends jspb.Message {
   getIface(): string;
   setIface(value: string): Capture;
 
-  getProtocol(): string;
-  setProtocol(value: string): Capture;
+  getFilter(): string;
+  setFilter(value: string): Capture;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Capture.AsObject;
@@ -22,7 +22,7 @@ export class Capture extends jspb.Message {
 export namespace Capture {
   export type AsObject = {
     iface: string,
-    protocol: string,
+    filter: string,
   }
 }
 

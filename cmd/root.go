@@ -17,6 +17,7 @@ import (
 )
 
 var (
+	ip      string
 	port    int
 	rootCmd = &cobra.Command{
 		Use:   "Launch gRPC && UI server",
@@ -37,7 +38,8 @@ func Execute() {
 
 func init() {
 	log.SetReportCaller(true)
-	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 8888, "server port")
+	rootCmd.PersistentFlags().StringVarP(&ip, "ip", "", "", "IP address to listen on")
+	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 8888, "listen port")
 }
 
 //go:embed all:dist
@@ -57,7 +59,7 @@ func startMuxServer() {
 	log.Infof("listening: %d", port)
 
 	wrappedGrpc := grpcweb.WrapServer(grpcServer)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", ip, port), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if wrappedGrpc.IsGrpcWebRequest(r) {
 			wrappedGrpc.ServeHTTP(w, r)
 			return

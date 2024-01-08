@@ -15,7 +15,7 @@ service Captures {
 
 message Capture {
   string iface = 1;
-  string protocol = 2;
+  string filter = 2;
 }
 
 message Packet {

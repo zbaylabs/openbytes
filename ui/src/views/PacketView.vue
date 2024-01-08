@@ -1,13 +1,13 @@
 <template>
   <q-item>
     <q-item-section top class="col-2 gt-sm">
-      <q-select dense v-model="model.iface" :options="options" label="iface" />
+      <q-select dense v-model="capture.iface" :options="options" label="iface" />
     </q-item-section>
     <q-item-section top>
-      <q-input dense v-model="model.keyword" label="keyword" placeholder="TCP 80" />
+      <q-input dense v-model="capture.filter" label="filter" placeholder="tcp and port 80" />
     </q-item-section>
     <q-item-section side>
-      <q-btn icon="search" dense push color="white" text-color="primary" round @click="start()" />
+      <q-btn icon="rocket_launch" dense push color="white" text-color="primary" round @click="start()" />
     </q-item-section>
   </q-item>
 
@@ -35,7 +35,7 @@
 import * as grpcWeb from 'grpc-web';
 import * as empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 import * as struct_pb from 'google-protobuf/google/protobuf/struct_pb';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { apiService } from '../api.service';
 import { Packet, Capture } from '../../../api/js/capture_pb';
 import { useQuasar } from 'quasar'
@@ -44,16 +44,17 @@ const $q = useQuasar();
 const packets = ref<Packet.AsObject[]>([]);
 let stream: grpcWeb.ClientReadableStream<Packet>;
 
-const model = ref({ iface: '', keyword: '' })
-const options = ref<string[]>([])
+const capture = ref(new Capture().toObject());
+const options = ref<string[]>([]);
 
 function start() {
-  if (model.value.iface == '') {
-    $q.notify({ message: 'select iface please', position: 'top-right', color: 'primary', icon: 'warning' });
+  if (capture.value.iface == '') {
+    $q.notify({ message: 'select iface firstly', position: 'top-right', color: 'primary', icon: 'warning' });
   } else {
     $q.notify({ message: 'start capture', position: 'top-right', color: 'primary', icon: 'info' });
     packets.value = [];
-    stream = apiService.captureClient.list(new Capture().setIface(model.value.iface));
+    let cap = new Capture().setIface(capture.value.iface).setFilter(capture.value.filter);
+    stream = apiService.captureClient.list(cap);
     stream.on('data', response => {
       // console.log(response.toObject());
       packets.value.splice(0, 0, response.toObject());
@@ -61,6 +62,7 @@ function start() {
     });
     stream.on('error', err => {
       console.log(err);
+      $q.notify({ message: err.message, position: 'top-right', color: 'red', icon: 'error' });
     });
   }
 };
@@ -77,7 +79,7 @@ onMounted(() => {
   })
 })
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
   console.log('begin cancel...');
   if (stream != null) {
     stream.cancel();
