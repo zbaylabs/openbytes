@@ -45,9 +45,5 @@ message Point {
 
 message CopyRequest {
   string iface = 1;
-  repeated Destination destinations = 2;
-  message Destination {
-    string ip = 1;
-    uint32 port = 2;
-  }
+  repeated Address destinations = 2;
 }

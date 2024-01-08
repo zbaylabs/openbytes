@@ -131,10 +131,10 @@ export class CopyRequest extends jspb.Message {
   getIface(): string;
   setIface(value: string): CopyRequest;
 
-  getDestinationsList(): Array<CopyRequest.Destination>;
-  setDestinationsList(value: Array<CopyRequest.Destination>): CopyRequest;
+  getDestinationsList(): Array<Address>;
+  setDestinationsList(value: Array<Address>): CopyRequest;
   clearDestinationsList(): CopyRequest;
-  addDestinations(value?: CopyRequest.Destination, index?: number): CopyRequest.Destination;
+  addDestinations(value?: Address, index?: number): Address;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CopyRequest.AsObject;
@@ -147,30 +147,7 @@ export class CopyRequest extends jspb.Message {
 export namespace CopyRequest {
   export type AsObject = {
     iface: string,
-    destinationsList: Array<CopyRequest.Destination.AsObject>,
+    destinationsList: Array<Address.AsObject>,
   }
-
-  export class Destination extends jspb.Message {
-    getIp(): string;
-    setIp(value: string): Destination;
-
-    getPort(): number;
-    setPort(value: number): Destination;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): Destination.AsObject;
-    static toObject(includeInstance: boolean, msg: Destination): Destination.AsObject;
-    static serializeBinaryToWriter(message: Destination, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): Destination;
-    static deserializeBinaryFromReader(message: Destination, reader: jspb.BinaryReader): Destination;
-  }
-
-  export namespace Destination {
-    export type AsObject = {
-      ip: string,
-      port: number,
-    }
-  }
-
 }
 
