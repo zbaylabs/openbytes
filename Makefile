@@ -30,5 +30,5 @@ ui:generate
 	cd ui && npm run build
 
 build:ui
-	cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+	rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
 	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE) *.go
