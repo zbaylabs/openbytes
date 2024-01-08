@@ -19,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/packet',
     name: 'packet',
     component: () => import('../views/PacketView.vue')
+  },
+  {
+    path: '/mirror',
+    name: 'mirror',
+    component: () => import('../views/MirrorView.vue')
   }
 ]
 

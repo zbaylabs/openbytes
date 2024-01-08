@@ -10,8 +10,11 @@ import (
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
 	pb "github.com/zbaylab/openbytes/api/go"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/structpb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 type CapturesImpl struct {
@@ -150,4 +153,8 @@ func (s *CapturesImpl) Traffic(in *pb.Capture, stream pb.Captures_TrafficServer)
 	}
 
 	return nil
+}
+
+func (s *CapturesImpl) Copy(context.Context, *pb.CopyRequest) (*wrapperspb.StringValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Copy not implemented")
 }

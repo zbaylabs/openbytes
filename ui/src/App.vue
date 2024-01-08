@@ -41,7 +41,7 @@
           <q-expansion-item group="somegroup" label="Replay" header-class="text-purple">
             <q-card>
               <q-card-section>
-                <router-link to="/about" style="padding-left: 5px;">About</router-link>
+                <router-link to="/mirror" style="padding-left: 5px;">Mirror</router-link>
               </q-card-section>
             </q-card>
           </q-expansion-item>

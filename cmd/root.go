@@ -20,7 +20,7 @@ var (
 	ip      string
 	port    int
 	rootCmd = &cobra.Command{
-		Use:   "Launch gRPC && UI server",
+		Use:   "Launch UI && gRPC server",
 		Short: "",
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {

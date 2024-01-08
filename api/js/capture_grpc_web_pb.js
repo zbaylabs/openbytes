@@ -23,6 +23,8 @@ grpc.web = require('grpc-web');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js')
 
 var google_protobuf_struct_pb = require('google-protobuf/google/protobuf/struct_pb.js')
+
+var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js')
 const proto = {};
 proto.openbytes = require('./capture_pb.js');
 
@@ -248,6 +250,67 @@ proto.openbytes.CapturesPromiseClient.prototype.traffic =
       request,
       metadata || {},
       methodDescriptor_Captures_Traffic);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.openbytes.CopyRequest,
+ *   !proto.google.protobuf.StringValue>}
+ */
+const methodDescriptor_Captures_Copy = new grpc.web.MethodDescriptor(
+  '/openbytes.Captures/Copy',
+  grpc.web.MethodType.UNARY,
+  proto.openbytes.CopyRequest,
+  google_protobuf_wrappers_pb.StringValue,
+  /**
+   * @param {!proto.openbytes.CopyRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  google_protobuf_wrappers_pb.StringValue.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.openbytes.CopyRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.StringValue)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.StringValue>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.openbytes.CapturesClient.prototype.copy =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/openbytes.Captures/Copy',
+      request,
+      metadata || {},
+      methodDescriptor_Captures_Copy,
+      callback);
+};
+
+
+/**
+ * @param {!proto.openbytes.CopyRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.google.protobuf.StringValue>}
+ *     Promise that resolves to the response
+ */
+proto.openbytes.CapturesPromiseClient.prototype.copy =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/openbytes.Captures/Copy',
+      request,
+      metadata || {},
+      methodDescriptor_Captures_Copy);
 };
 
 

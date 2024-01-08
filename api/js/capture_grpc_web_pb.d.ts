@@ -2,6 +2,7 @@ import * as grpcWeb from 'grpc-web';
 
 import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 import * as google_protobuf_struct_pb from 'google-protobuf/google/protobuf/struct_pb';
+import * as google_protobuf_wrappers_pb from 'google-protobuf/google/protobuf/wrappers_pb';
 import * as capture_pb from './capture_pb';
 
 
@@ -27,6 +28,13 @@ export class CapturesClient {
     metadata?: grpcWeb.Metadata
   ): grpcWeb.ClientReadableStream<capture_pb.Point>;
 
+  copy(
+    request: capture_pb.CopyRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: google_protobuf_wrappers_pb.StringValue) => void
+  ): grpcWeb.ClientReadableStream<google_protobuf_wrappers_pb.StringValue>;
+
 }
 
 export class CapturesPromiseClient {
@@ -48,6 +56,11 @@ export class CapturesPromiseClient {
     request: capture_pb.Capture,
     metadata?: grpcWeb.Metadata
   ): grpcWeb.ClientReadableStream<capture_pb.Point>;
+
+  copy(
+    request: capture_pb.CopyRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<google_protobuf_wrappers_pb.StringValue>;
 
 }
 

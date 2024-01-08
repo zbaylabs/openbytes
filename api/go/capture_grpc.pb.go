@@ -13,6 +13,7 @@ import (
 	status "google.golang.org/grpc/status"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	structpb "google.golang.org/protobuf/types/known/structpb"
+	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,7 @@ const (
 	Captures_Device_FullMethodName  = "/openbytes.Captures/Device"
 	Captures_List_FullMethodName    = "/openbytes.Captures/List"
 	Captures_Traffic_FullMethodName = "/openbytes.Captures/Traffic"
+	Captures_Copy_FullMethodName    = "/openbytes.Captures/Copy"
 )
 
 // CapturesClient is the client API for Captures service.
@@ -33,6 +35,7 @@ type CapturesClient interface {
 	Device(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*structpb.ListValue, error)
 	List(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_ListClient, error)
 	Traffic(ctx context.Context, in *Capture, opts ...grpc.CallOption) (Captures_TrafficClient, error)
+	Copy(ctx context.Context, in *CopyRequest, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
 }
 
 type capturesClient struct {
@@ -116,6 +119,15 @@ func (x *capturesTrafficClient) Recv() (*Point, error) {
 	return m, nil
 }
 
+func (c *capturesClient) Copy(ctx context.Context, in *CopyRequest, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
+	out := new(wrapperspb.StringValue)
+	err := c.cc.Invoke(ctx, Captures_Copy_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CapturesServer is the server API for Captures service.
 // All implementations must embed UnimplementedCapturesServer
 // for forward compatibility
@@ -123,6 +135,7 @@ type CapturesServer interface {
 	Device(context.Context, *emptypb.Empty) (*structpb.ListValue, error)
 	List(*Capture, Captures_ListServer) error
 	Traffic(*Capture, Captures_TrafficServer) error
+	Copy(context.Context, *CopyRequest) (*wrapperspb.StringValue, error)
 	mustEmbedUnimplementedCapturesServer()
 }
 
@@ -138,6 +151,9 @@ func (UnimplementedCapturesServer) List(*Capture, Captures_ListServer) error {
 }
 func (UnimplementedCapturesServer) Traffic(*Capture, Captures_TrafficServer) error {
 	return status.Errorf(codes.Unimplemented, "method Traffic not implemented")
+}
+func (UnimplementedCapturesServer) Copy(context.Context, *CopyRequest) (*wrapperspb.StringValue, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Copy not implemented")
 }
 func (UnimplementedCapturesServer) mustEmbedUnimplementedCapturesServer() {}
 
@@ -212,6 +228,24 @@ func (x *capturesTrafficServer) Send(m *Point) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _Captures_Copy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CopyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CapturesServer).Copy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Captures_Copy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CapturesServer).Copy(ctx, req.(*CopyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Captures_ServiceDesc is the grpc.ServiceDesc for Captures service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -222,6 +256,10 @@ var Captures_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Device",
 			Handler:    _Captures_Device_Handler,
+		},
+		{
+			MethodName: "Copy",
+			Handler:    _Captures_Copy_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
