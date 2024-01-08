@@ -56,7 +56,7 @@ func startMuxServer() {
 		return
 	}
 	mux.Handle("/", fileServerWithExt(http.FS(dist)))
-	log.Infof("listening: %d", port)
+	log.Infof("listen on %s:%d", ip, port)
 
 	wrappedGrpc := grpcweb.WrapServer(grpcServer)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", ip, port), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
