@@ -1,63 +1,100 @@
 <template>
-  <q-item>
-    <q-item-section top class="col-2 gt-sm">
-      <q-select dense v-model="capture.iface" :options="options" label="iface" />
-    </q-item-section>
-    <!-- <q-item-section top>
-      <q-input dense v-model="capture.filter" label="filter" placeholder="tcp and port 80" />
-    </q-item-section> -->
-    <q-item-section top>
-      <q-input dense v-model="capture.filter" placeholder="destination ip" />
-    </q-item-section>
-    <q-item-section top>
-      <q-input dense v-model="capture.filter" placeholder="destination port" />
-    </q-item-section>
-    <q-item-section side>
-      <q-btn icon="rocket_launch" dense push color="white" text-color="primary" round @click="start()" />
-    </q-item-section>
-    <q-item-section side>
-      <q-btn icon="cancel" dense push color="white" text-color="primary" round @click="start()" />
-    </q-item-section>
-  </q-item>
+  <div class="q-pa-md" style="max-width: 40%">
+    <q-list bordered padding>
+      <q-item>
+        <q-item-section>
+          <!-- <q-item-label>OVERLINE</q-item-label> -->
+          <!-- <q-item-label>Single line item</q-item-label>
+          <q-item-label caption>Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit
+            elit.</q-item-label> -->
+          <q-select dense v-model="cr.iface" :options="options" label="iface" />
+        </q-item-section>
+
+        <!-- <q-item-section side top>
+          <q-item-label caption>5 min ago</q-item-label>
+        </q-item-section> -->
+      </q-item>
+
+      <!-- <q-separator spaced /> -->
+      <q-item-label header>Destination</q-item-label>
+
+      <q-item v-for="item in cr.destinationsList">
+        <q-item-section avatar>
+          <q-icon color="primary" name="dvr" />
+        </q-item-section>
+        <q-item-section>
+          <q-input dense v-model="item.ip" placeholder="ip" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label caption>
+            <q-input dense v-model="item.port" placeholder="port" />
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item clickable v-ripple @click="addDestination()">
+        <q-item-section avatar>
+          <q-icon color="primary" name="add_circle" />
+        </q-item-section>
+        <!-- <q-item-section avatar>
+          <q-icon color="primary" name="remove_circle" @click="removeDestination()" />
+        </q-item-section> -->
+        <q-item-section></q-item-section>
+      </q-item>
+
+      <q-separator />
+      <q-item>
+        <q-item-section></q-item-section>
+        <q-item-section side>
+          <q-btn icon="done" dense push color="white" text-color="primary" round @click="start()" />
+        </q-item-section>
+        <q-item-section side>
+          <q-btn icon="clear" dense push color="white" text-color="primary" round @click="start()" />
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </div>
 </template>
 
 <script setup lang="ts">
 import * as grpcWeb from 'grpc-web';
 import * as empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 import * as struct_pb from 'google-protobuf/google/protobuf/struct_pb';
+import * as wrappers_pb from 'google-protobuf/google/protobuf/wrappers_pb';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { apiService } from '../api.service';
-import { Packet, Capture } from '../../../api/js/capture_pb';
-import { useQuasar } from 'quasar'
+import { CopyRequest } from '../../../api/js/capture_pb';
+import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
-const packets = ref<Packet.AsObject[]>([]);
-let stream: grpcWeb.ClientReadableStream<Packet>;
-
-const capture = ref(new Capture().toObject());
 const options = ref<string[]>([]);
+const cr = ref(new CopyRequest().toObject())
 
 function start() {
-  if (capture.value.iface == '') {
+  if (cr.value.iface == '') {
     $q.notify({ message: 'select iface', position: 'top-right', color: 'primary', icon: 'warning' });
   } else {
-    $q.notify({ message: 'start capture', position: 'top-right', color: 'primary', icon: 'info' });
-    packets.value = [];
-    let cap = new Capture().setIface(capture.value.iface).setFilter(capture.value.filter);
-    stream = apiService.captureClient.list(cap);
-    stream.on('data', response => {
-      console.log(response.toObject());
-      packets.value.splice(0, 0, response.toObject());
-      // items.value.push({});
-    });
-    stream.on('error', err => {
-      console.log(err);
-      $q.notify({ message: err.message, position: 'top-right', color: 'red', icon: 'error' });
-    });
-  }
-};
+    $q.notify({ message: 'start mirror', position: 'top-right', color: 'primary', icon: 'info' });
+    let copyRequest = new CopyRequest().setIface(cr.value.iface)//.setDestinationsList(cr.value.destinationsList) //.setFilter(capture.value.filter);
+    for (var item of cr.value.destinationsList) {
+      copyRequest.addDestinations(new CopyRequest.Destination().setIp(item.ip).setPort(item.port));
+    }
+    apiService.captureClient.copy(copyRequest, {}, (error: grpcWeb.RpcError, respone: wrappers_pb.StringValue) => {
+      if (error != null) {
+        console.log(error);
+      } else {
+        console.log(respone.getValue());
+      }
+    })
+  };
+}
+
+function addDestination() {
+  cr.value.destinationsList.push(new CopyRequest.Destination().toObject());
+}
 
 onMounted(() => {
+  cr.value.destinationsList.push(new CopyRequest.Destination().toObject());
   apiService.captureClient.device(new empty_pb.Empty(), {}, (error: grpcWeb.RpcError, respone: struct_pb.ListValue) => {
     if (error != null) {
       console.log(error);
@@ -71,8 +108,5 @@ onMounted(() => {
 
 onUnmounted(() => {
   console.log('begin cancel...');
-  if (stream != null) {
-    stream.cancel();
-  }
 })
 </script>

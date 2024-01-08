@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -137,14 +138,6 @@ func fetch() {
 }
 
 func (s *CapturesImpl) Traffic(in *pb.Capture, stream pb.Captures_TrafficServer) error {
-	// values := []pb.Point{
-	// 	{Label: "2021", Protocol: "tcp", Count: 20},
-	// 	{Label: "2022", Count: 60},
-	// 	{Label: "202301", Count: 31},
-	// 	{Label: "202302", Count: 42},
-	// 	{Label: "202303", Count: 40},
-	// 	{Label: "2024", Count: 51}}
-
 	for v := range pointChan {
 		if err := stream.Send(&v); err != nil {
 			log.Errorln(err)
@@ -155,6 +148,7 @@ func (s *CapturesImpl) Traffic(in *pb.Capture, stream pb.Captures_TrafficServer)
 	return nil
 }
 
-func (s *CapturesImpl) Copy(context.Context, *pb.CopyRequest) (*wrapperspb.StringValue, error) {
+func (s *CapturesImpl) Copy(ctx context.Context, request *pb.CopyRequest) (*wrapperspb.StringValue, error) {
+	fmt.Println(request.String())
 	return nil, status.Errorf(codes.Unimplemented, "method Copy not implemented")
 }
