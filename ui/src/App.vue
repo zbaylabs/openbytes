@@ -18,7 +18,7 @@
       <!-- drawer content -->
       <div class="q-pa-md">
         <q-list>
-          <q-expansion-item group="somegroup" label="Overview" default-opened header-class="text-primary">
+          <q-expansion-item group="somegroup" label="Analyze" default-opened header-class="text-primary">
             <q-card>
               <q-card-section>
                 <router-link to="/" style="padding-left: 5px;">Traffic</router-link>
