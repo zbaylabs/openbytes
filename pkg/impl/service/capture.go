@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"net"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,8 +13,6 @@ import (
 	"github.com/google/gopacket/pcap"
 	log "github.com/sirupsen/logrus"
 	pb "github.com/zbaylab/openbytes/api/go"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
@@ -149,6 +149,66 @@ func (s *CapturesImpl) Traffic(in *pb.Capture, stream pb.Captures_TrafficServer)
 }
 
 func (s *CapturesImpl) Copy(ctx context.Context, request *pb.CopyRequest) (*wrapperspb.StringValue, error) {
-	fmt.Println(request.String())
-	return nil, status.Errorf(codes.Unimplemented, "method Copy not implemented")
+	handle, err := pcap.OpenLive(request.Iface, 65536, true, pcap.BlockForever)
+	if err != nil {
+		log.Errorln(err)
+		return nil, err
+	}
+	defer handle.Close()
+
+	if request.Port != "" {
+		err = handle.SetBPFFilter(fmt.Sprintf("src port %s", request.Port))
+		if err != nil {
+			log.Errorln(err)
+			return nil, err
+		}
+	}
+
+	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
+	for packet := range packetSource.Packets() {
+		tcpLayer := packet.Layer(layers.LayerTypeTCP)
+		if tcpLayer == nil {
+			continue
+		}
+		tcpPacket, _ := tcpLayer.(*layers.TCP)
+
+		ipLayer := packet.Layer(layers.LayerTypeIPv4)
+		if ipLayer == nil {
+			continue
+		}
+		//ipPacket, _ := ipLayer.(*layers.IPv4)
+
+		ip := net.ParseIP(request.Destinations[0].Ip)
+		if ip == nil {
+			return nil, fmt.Errorf("invalid ip: %s", request.Destinations[0].Ip)
+		}
+		port, err := strconv.Atoi(request.Destinations[0].Port)
+		if err != nil {
+			return nil, err
+		}
+		conn, err := net.DialTCP("tcp", nil, &net.TCPAddr{
+			IP:   ip,
+			Port: port,
+		})
+		if err != nil {
+			log.Errorln("Failed to establish connection to destination:", err)
+			continue
+		}
+
+		if _, err := conn.Write(tcpPacket.Payload); err != nil {
+			log.Println("Failed to forward packet:", err)
+		}
+
+		response := make([]byte, 1024)
+		_, err = conn.Read(response)
+		if err != nil {
+			log.Errorln("Failed to read response from destination:", err)
+		}
+
+		if err := handle.WritePacketData(packet.Data()); err != nil {
+			log.Errorln("Failed to write response packet:", err)
+		}
+	}
+
+	return &wrapperspb.StringValue{Value: "done"}, nil
 }

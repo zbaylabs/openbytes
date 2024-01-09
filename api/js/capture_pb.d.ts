@@ -131,6 +131,9 @@ export class CopyRequest extends jspb.Message {
   getIface(): string;
   setIface(value: string): CopyRequest;
 
+  getPort(): string;
+  setPort(value: string): CopyRequest;
+
   getDestinationsList(): Array<CopyRequest.Destination>;
   setDestinationsList(value: Array<CopyRequest.Destination>): CopyRequest;
   clearDestinationsList(): CopyRequest;
@@ -147,6 +150,7 @@ export class CopyRequest extends jspb.Message {
 export namespace CopyRequest {
   export type AsObject = {
     iface: string,
+    port: string,
     destinationsList: Array<CopyRequest.Destination.AsObject>,
   }
 

@@ -1081,7 +1081,7 @@ proto.openbytes.Point.prototype.setOtherCount = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.openbytes.CopyRequest.repeatedFields_ = [2];
+proto.openbytes.CopyRequest.repeatedFields_ = [3];
 
 
 
@@ -1115,6 +1115,7 @@ proto.openbytes.CopyRequest.prototype.toObject = function(opt_includeInstance) {
 proto.openbytes.CopyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     iface: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    port: jspb.Message.getFieldWithDefault(msg, 2, ""),
     destinationsList: jspb.Message.toObjectList(msg.getDestinationsList(),
     proto.openbytes.CopyRequest.Destination.toObject, includeInstance)
   };
@@ -1158,6 +1159,10 @@ proto.openbytes.CopyRequest.deserializeBinaryFromReader = function(msg, reader) 
       msg.setIface(value);
       break;
     case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPort(value);
+      break;
+    case 3:
       var value = new proto.openbytes.CopyRequest.Destination;
       reader.readMessage(value,proto.openbytes.CopyRequest.Destination.deserializeBinaryFromReader);
       msg.addDestinations(value);
@@ -1198,10 +1203,17 @@ proto.openbytes.CopyRequest.serializeBinaryToWriter = function(message, writer) 
       f
     );
   }
+  f = message.getPort();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
   f = message.getDestinationsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      2,
+      3,
       f,
       proto.openbytes.CopyRequest.Destination.serializeBinaryToWriter
     );
@@ -1388,12 +1400,30 @@ proto.openbytes.CopyRequest.prototype.setIface = function(value) {
 
 
 /**
- * repeated Destination destinations = 2;
+ * optional string port = 2;
+ * @return {string}
+ */
+proto.openbytes.CopyRequest.prototype.getPort = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.openbytes.CopyRequest} returns this
+ */
+proto.openbytes.CopyRequest.prototype.setPort = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * repeated Destination destinations = 3;
  * @return {!Array<!proto.openbytes.CopyRequest.Destination>}
  */
 proto.openbytes.CopyRequest.prototype.getDestinationsList = function() {
   return /** @type{!Array<!proto.openbytes.CopyRequest.Destination>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.openbytes.CopyRequest.Destination, 2));
+    jspb.Message.getRepeatedWrapperField(this, proto.openbytes.CopyRequest.Destination, 3));
 };
 
 
@@ -1402,7 +1432,7 @@ proto.openbytes.CopyRequest.prototype.getDestinationsList = function() {
  * @return {!proto.openbytes.CopyRequest} returns this
 */
 proto.openbytes.CopyRequest.prototype.setDestinationsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 2, value);
+  return jspb.Message.setRepeatedWrapperField(this, 3, value);
 };
 
 
@@ -1412,7 +1442,7 @@ proto.openbytes.CopyRequest.prototype.setDestinationsList = function(value) {
  * @return {!proto.openbytes.CopyRequest.Destination}
  */
 proto.openbytes.CopyRequest.prototype.addDestinations = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 2, opt_value, proto.openbytes.CopyRequest.Destination, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.openbytes.CopyRequest.Destination, opt_index);
 };
 
 
