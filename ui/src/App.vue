@@ -19,11 +19,16 @@
       <div class="q-pa-md">
         <q-list>
           <q-expansion-item group="somegroup" label="Analyze" default-opened header-class="text-primary">
-            <q-card>
-              <q-card-section>
-                <router-link to="/" style="padding-left: 5px;">Traffic</router-link>
-              </q-card-section>
-            </q-card>
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <router-link to="/" style="padding-left: 6px;">Traffic</router-link>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <router-link to="/" style="padding-left: 6px;">Latency</router-link>
+              </q-item-section>
+            </q-item>
           </q-expansion-item>
 
           <q-separator />
@@ -31,7 +36,7 @@
           <q-expansion-item group="somegroup" label="Capture" header-class="text-teal">
             <q-card>
               <q-card-section>
-                <router-link to="/packet" style="padding-left: 5px;">Packets</router-link>
+                <router-link to="/packet" style="padding-left: 6px;">Packets</router-link>
               </q-card-section>
             </q-card>
           </q-expansion-item>
@@ -41,7 +46,7 @@
           <q-expansion-item group="somegroup" label="Replay" header-class="text-purple">
             <q-card>
               <q-card-section>
-                <router-link to="/mirror" style="padding-left: 5px;">Mirror</router-link>
+                <router-link to="/mirror" style="padding-left: 6px;">Mirror</router-link>
               </q-card-section>
             </q-card>
           </q-expansion-item>
