@@ -100,7 +100,12 @@ func init() {
 }
 
 func fetch() {
-	handle, err := pcap.OpenLive("en0", 65535, true, pcap.BlockForever)
+	devices, err := pcap.FindAllDevs()
+	if err != nil || len(devices) == 0 {
+		log.Errorln(err)
+		return
+	}
+	handle, err := pcap.OpenLive(devices[0].Name, 65535, true, pcap.BlockForever)
 	if err != nil {
 		log.Fatal(err)
 	}
