@@ -24,13 +24,13 @@ jobs:
       run: echo 'check'
 
     - name: Run distcheck
-      run: make build-ui build-go
+      run: make build-ui build-go && ls 
 
     - name: Release with Notes
       uses: softprops/action-gh-release@v1
       with:
         draft: true
-        files: bundle/openbytes
+        files: openbytes/bundle/openbytes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
