@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: configure
-      run: pwd
+      run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: cd ui && npm install && sudo apt install libpcap-dev
@@ -32,7 +32,6 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         name: openbytes
-        #tag: ${{ github.ref }}
-        #artifacts: "bundles/openbytes"
+        tag: ${{ env.FILE_DATE }}
         artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
