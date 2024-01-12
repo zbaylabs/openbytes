@@ -26,14 +26,13 @@ jobs:
     - name: Run distcheck
       run: make build-ui build-go
 
-    - name: Release with Notes
-      uses: softprops/action-gh-release@v1
+    - name: Create Release
+      uses: ncipollo/release-action@v1
       with:
-        draft: true
-        files: bundles/openbytes
+        name: openbytes
+        tag: v1
+        artifacts: "bundles/openbytes"
         token: ${{ secrets.GITHUB_TOKEN }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # - name: Create Release
     #   id: create_release
