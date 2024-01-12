@@ -32,22 +32,8 @@ jobs:
       with:
 #       tag: openwrt_JD-AX1800_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         tag: Openbytes-${{ github.ref }}
-        artifacts: bundles/*
+        artifacts: bundles/openbytes
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
         body: |
           Enjoy~
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-        draft: false
-        prerelease: false
