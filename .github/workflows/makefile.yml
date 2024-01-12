@@ -1,0 +1,27 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: configure
+      run: pwd
+
+    - name: Install dependencies
+      run: cd ui && npm install
+
+    - name: Run check
+      run: echo 'check'
+
+    - name: Run distcheck
+      run: make build
