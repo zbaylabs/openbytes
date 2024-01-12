@@ -30,12 +30,12 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
             Changes in this Release
             - First Change
             - Second Change
-          draft: false
-          prerelease: false
+        draft: false
+        prerelease: false
