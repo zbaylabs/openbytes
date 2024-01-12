@@ -31,7 +31,8 @@ jobs:
       with:
         name: openbytes
         tag: v1
-        artifacts: "bundles/openbytes"
+        #artifacts: "bundles/openbytes"
+        artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
 
     # - name: Create Release
