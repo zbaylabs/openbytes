@@ -18,7 +18,7 @@ jobs:
       run: pwd
 
     - name: Install dependencies
-      run: cd ui && npm install && sudo apt install libbpf-dev
+      run: cd ui && npm install && sudo apt install libpcap-dev
 
     - name: Run check
       run: echo 'check'
