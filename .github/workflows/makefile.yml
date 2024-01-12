@@ -26,14 +26,14 @@ jobs:
     - name: Run distcheck
       run: make build-ui build-go
 
-    - name: Create Release
-      uses: wangyoucao577/go-release-action@v1
+    - name: Release with Notes
+      uses: softprops/action-gh-release@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: linux
-        goarch: amd64
-        project_path: "./openbytes/bundles"
-        binary_name: "openbytes"
+        body_path: ".github/RELEASE-TEMPLATE.md"
+        draft: true
+        files: bundle/openbytes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # - name: Create Release
     #   id: create_release
