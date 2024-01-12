@@ -32,7 +32,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         name: openbytes
-        tag: v1
+        tag: ${{ env.FILE_DATE }}
         #artifacts: "bundles/openbytes"
         artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
