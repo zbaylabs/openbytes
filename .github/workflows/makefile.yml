@@ -26,14 +26,17 @@ jobs:
     - name: Run distcheck
       run: make build-ui build-go
       
-
-    - name: Release
-      uses: ncipollo/release-action@v1
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-#       tag: openwrt_JD-AX1800_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        tag: Openbytes-${{ github.ref }}
-        artifacts: bundles/openbytes
-        allowUpdates: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         body: |
-          Enjoy~
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
