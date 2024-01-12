@@ -26,6 +26,18 @@ jobs:
     - name: Run distcheck
       run: make build-ui build-go
       
+
+    - name: Release
+      uses: ncipollo/release-action@v1
+      with:
+#       tag: openwrt_JD-AX1800_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        tag: Openbytes-${{ github.ref }}
+        artifacts: bundles/*
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
+          Enjoy~
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
