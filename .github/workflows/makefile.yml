@@ -26,7 +26,7 @@ jobs:
       run: echo 'check'
 
     - name: Run distcheck
-      run: make build-ui build-go
+      run: make build-ui release
 
     - name: Create Release
       uses: ncipollo/release-action@v1
