@@ -29,7 +29,6 @@ jobs:
     - name: Release with Notes
       uses: softprops/action-gh-release@v1
       with:
-        body_path: ".github/RELEASE-TEMPLATE.md"
         draft: true
         files: bundle/openbytes
       env:
