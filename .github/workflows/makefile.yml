@@ -32,7 +32,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: linux
         goarch: amd64
-        project_path: "./bundles"
+        project_path: "./openbytes/bundles"
         binary_name: "openbytes"
 
     # - name: Create Release
