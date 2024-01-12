@@ -33,11 +33,7 @@ build-go:
 	rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
 	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE) *.go
 
-build:
-	@echo 'build ui and go'
-
-all:generate build-ui build-go
-	@echo 'build ui and backend'
+build:generate build-ui build-go
 
 release:
 	rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map

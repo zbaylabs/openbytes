@@ -25,7 +25,7 @@ jobs:
     - name: Run check
       run: echo 'check'
 
-    - name: Run distcheck
+    - name: Run build
       run: make build-ui release
 
     - name: Create Release
