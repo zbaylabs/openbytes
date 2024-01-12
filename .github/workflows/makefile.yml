@@ -30,7 +30,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         draft: true
-        files: openbytes/bundle/openbytes
+        files: bundles/openbytes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
