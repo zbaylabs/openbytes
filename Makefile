@@ -25,10 +25,13 @@ generate-js:
 	--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:api/js
 	@echo Generate-js completely.
 
-ui:generate
+build-ui:
 #	cp -rf api/js/ ui/src/sdk
 	cd ui && npm run build
 
-build:ui
+build-go:
 	rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
 	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE) *.go
+
+all:generate build-ui build-go
+	@echo 'build ui and backend'
