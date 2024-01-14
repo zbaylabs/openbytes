@@ -21,43 +21,52 @@ jobs:
     - name: Run configure
       run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
-    - name: Run build
-      run: make build-ui release
+    # - name: Run build
+    #   run: make build-ui release
 
-    # - name: Create Release
-    #   uses: ncipollo/release-action@v1
-    #   with:
-    #     name: openbytes-linux-x86_64
-    #     tag: {{ env.FILE_DATE }}
-    #     artifacts: "bundles/*"
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-
-  build-on-linux-arm64:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    strategy:
-      matrix:
-        include:
-          - arch: aarch64
-            distro: ubuntu22.04
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Install dependencies
-      run: cd ui && npm install && sudo apt install libpcap-dev
-
-    - name: Run configure
-      run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-
-    - name: Run build
-      run: make build-ui release
+    - name: Generate build files
+      uses: thatisuday/go-cross-build@v1
+      with:
+          platforms: 'linux/amd64, linux/arm64'
+          package: 'demo'
+          name: 'program'
+          compress: 'true'
+          dest: 'bundles'
 
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
         name: openbytes
-        tag: ${{ env.FILE_DATE }}
+        tag: {{ env.FILE_DATE }}
         artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
+
+  # build-on-linux-arm64:
+  #   runs-on: ubuntu-22.04
+  #   permissions:
+  #     contents: write
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - arch: aarch64
+  #           distro: ubuntu22.04
+
+  #   steps:
+  #   - uses: actions/checkout@v3
+
+  #   - name: Install dependencies
+  #     run: cd ui && npm install && sudo apt install libpcap-dev
+
+  #   - name: Run configure
+  #     run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+  #   - name: Run build
+  #     run: make build-ui build-go
+
+  #   - name: Create Release
+  #     uses: ncipollo/release-action@v1
+  #     with:
+  #       name: openbytes
+  #       tag: ${{ env.FILE_DATE }}
+  #       artifacts: "bundles/*"
+  #       token: ${{ secrets.GITHUB_TOKEN }}
