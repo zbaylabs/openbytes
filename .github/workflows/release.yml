@@ -38,6 +38,7 @@ jobs:
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         binary_name: "test-binary"
+        pre_command: "sudo apt install npm && sudo apt install libpcap-dev && cd ui && npm install"
         build_command: "make build-ui build-go"
 
     # - name: Run build
