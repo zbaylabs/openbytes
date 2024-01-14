@@ -31,6 +31,6 @@ build-ui:
 
 build-go:
 	rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE)-$(BUILD_TIME) *.go
+	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE) *.go
 
 build:generate build-ui build-go

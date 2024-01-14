@@ -24,10 +24,12 @@ jobs:
             goos: windows
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
-      run: sudo apt install libpcap-dev && cd ui && npm install
+      run: |
+        sudo apt install libpcap-dev 
+        cd ui && npm install && npm run build
 
     - name: Run configure
       run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
@@ -42,12 +44,13 @@ jobs:
     #     build_command: "make build-go"
 
     - name: Run build
-      run: make build-ui build-go
+      run: |
+        go build -o bundles/$(SERVICE)-${{ matrix.goarch }} *.go
 
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
         name: openbytes-${{ matrix.goarch }}
-        tag: ${{ env.FILE_DATE }}-${{ matrix.goarch }}
+        tag: ${{ matrix.goarch }}${{ env.FILE_DATE }}
         artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
