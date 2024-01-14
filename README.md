@@ -1,3 +1,6 @@
+![picture](misc/4206912369.png)
+
+
 Quick start:
 
 1. download binary from release;
@@ -6,9 +9,6 @@ Quick start:
 
 
 Enjoy~
-
-
-![picture](misc/4206912369.png)
 
 
 ./openbytes -h for more options.
