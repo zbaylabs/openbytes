@@ -26,11 +26,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: sudo apt install npm && sudo apt install libpcap-dev && cd ui && npm install
+    # - name: Install dependencies
+    #   run: sudo apt install npm && sudo apt install libpcap-dev && cd ui && npm install
 
-    - name: Run configure
-      run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+    # - name: Run configure
+    #   run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - uses: wangyoucao577/go-release-action@v1
       with:
@@ -38,7 +38,7 @@ jobs:
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         binary_name: "test-binary"
-        pre_command: "sudo apt install npm && sudo apt install libpcap-dev && cd ui && npm install"
+        pre_command: "apt install npm && apt install libpcap-dev && cd ui && npm install"
         build_command: "make build-ui build-go"
 
     # - name: Run build
