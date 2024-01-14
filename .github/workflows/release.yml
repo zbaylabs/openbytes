@@ -45,6 +45,7 @@ jobs:
 
     - name: Run build
       run: |
+        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
         go build -o bundles/$(SERVICE)-${{ matrix.goarch }} *.go
 
     - name: Create Release
