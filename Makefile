@@ -37,6 +37,4 @@ build:generate build-ui build-go
 
 release:
 	rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-	#GOOS=linux GOARCH=arm64 go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE)-linux-arm64 *.go
-	GOOS=linux GOARCH=amd64 go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE)-linux-amd64 *.go
-	#GOOS=darwin GOARCH=arm64 go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE)-mac-arm64 *.go
+	go build -ldflags='$(LD_FLAGS)' -o bundles/$(SERVICE) *.go

@@ -24,13 +24,13 @@ jobs:
     - name: Run build
       run: make build-ui release
 
-    - name: Create Release
-      uses: ncipollo/release-action@v1
-      with:
-        name: openbytes
-        tag: x84_64${{ env.FILE_DATE }}
-        artifacts: "bundles/*"
-        token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Create Release
+    #   uses: ncipollo/release-action@v1
+    #   with:
+    #     name: openbytes-linux-x86_64
+    #     tag: {{ env.FILE_DATE }}
+    #     artifacts: "bundles/*"
+    #     token: ${{ secrets.GITHUB_TOKEN }}
 
   build-on-linux-arm64:
     runs-on: ubuntu-22.04
@@ -58,6 +58,6 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         name: openbytes
-        tag: arm64${{ env.FILE_DATE }}
+        tag: ${{ env.FILE_DATE }}
         artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
