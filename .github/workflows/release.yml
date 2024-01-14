@@ -47,7 +47,7 @@ jobs:
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
-        name: openbytes
+        name: openbytes-${{ matrix.goarch }}
         tag: ${{ env.FILE_DATE }}-${{ matrix.goarch }}
         artifacts: "bundles/*"
         token: ${{ secrets.GITHUB_TOKEN }}
