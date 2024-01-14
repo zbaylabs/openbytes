@@ -7,10 +7,21 @@ on:
  #   - cron: 0 16 4,9,14,19,24,28,31 * *
 
 jobs:
-  build-on-linux-x86_64:
+  build:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
+      packages: write
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/386, linux/amd64, linux/arm64, windows/386, windows/amd64, darwin/amd64, darwin/arm64
+        goos: [linux]
+        goarch: [amd64, arm64]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+          - goarch: arm64
+            goos: windows
 
     steps:
     - uses: actions/checkout@v3
@@ -21,25 +32,24 @@ jobs:
     - name: Run configure
       run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
+    - uses: wangyoucao577/go-release-action@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        binary_name: "test-binary"
+        build_command: "make build-ui build-go"
+
     # - name: Run build
-    #   run: make build-ui release
+    #   run: make build-ui build-go
 
-    - name: Generate build files
-      uses: thatisuday/go-cross-build@v1
-      with:
-        platforms: 'linux/amd64, linux/arm64'
-        package: 'demo'
-        name: 'openbytes'
-        compress: 'true'
-        dest: 'bundles'
-
-    - name: Create Release
-      uses: ncipollo/release-action@v1
-      with:
-        name: openbytes
-        tag: ${{ env.FILE_DATE }}
-        artifacts: "bundles/*"
-        token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Create Release
+    #   uses: ncipollo/release-action@v1
+    #   with:
+    #     name: openbytes
+    #     tag: ${{ env.FILE_DATE }}
+    #     artifacts: "bundles/*"
+    #     token: ${{ secrets.GITHUB_TOKEN }}
 
   # build-on-linux-arm64:
   #   runs-on: ubuntu-22.04
