@@ -27,7 +27,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt install npm && sudo apt install libpcap-dev && cd ui && npm install
+      run: sudo apt install npm && sudo apt install libpcap-dev && cd ui && npm install && npm run build
 
     - name: Run configure
       run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
@@ -39,7 +39,7 @@ jobs:
         goarch: ${{ matrix.goarch }}
         binary_name: "test-binary"
         pre_command: ""
-        build_command: "make build-ui build-go"
+        build_command: "make build-go"
 
     # - name: Run build
     #   run: make build-ui build-go
