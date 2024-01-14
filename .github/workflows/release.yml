@@ -1,0 +1,63 @@
+name: Makefile CI/CD
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+ # schedule:
+ #   - cron: 0 16 4,9,14,19,24,28,31 * *
+
+jobs:
+  build-on-linux-x86_64:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: cd ui && npm install && sudo apt install libpcap-dev
+
+    - name: Run configure
+      run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+    - name: Run build
+      run: make build-ui release
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        name: openbytes
+        tag: x84_64${{ env.FILE_DATE }}
+        artifacts: "bundles/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-on-linux-arm64:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        include:
+          - arch: aarch64
+            distro: ubuntu22.04
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: cd ui && npm install && sudo apt install libpcap-dev
+
+    - name: Run configure
+      run: echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+    - name: Run build
+      run: make build-ui release
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        name: openbytes
+        tag: arm64${{ env.FILE_DATE }}
+        artifacts: "bundles/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
