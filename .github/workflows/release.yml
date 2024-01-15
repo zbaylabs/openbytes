@@ -17,18 +17,18 @@ jobs:
     - name: build
       run: |
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        mkdir -p "${PWD}/artifacts"
-        apt update
-        apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
-        wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
-        rm -rf /usr/local/go
-        tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
-        export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
-        echo $PATH
-        cd ui && npm install && npm run build
-        pwd && cd ../
-        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        go build -o artifacts/openbytes-x86_64 *.go
+        sudo mkdir -p "${PWD}/artifacts"
+        sudo apt update
+        sudo apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
+        sudo wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+        sudo rm -rf /usr/local/go
+        sudo tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+        sudo export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
+        sudo echo $PATH
+        sudo cd ui && npm install && npm run build
+        sudo pwd && cd ../
+        sudo rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+        sudo go build -o artifacts/openbytes-x86_64 *.go
 
   build-arm64:
     runs-on: ubuntu-latest
