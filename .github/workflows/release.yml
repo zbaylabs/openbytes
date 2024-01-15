@@ -58,10 +58,9 @@ jobs:
         run: |
           uname -a
           apt update
-          apt install libpcap-dev -y
-          apt install npm -y
+          apt install -y npm golang libpcap-dev
           cd ui && npm install && npm run build
-          make build-go
+          pwd && cd ../ && make build-go
 
     # - name: Run build
     #   run: |
