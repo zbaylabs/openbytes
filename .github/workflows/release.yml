@@ -49,7 +49,7 @@ jobs:
       id: runcmd
       with:
         arch: aarch64
-        distro: ubuntu-latest
+        distro: ubuntu22.04
         # Not required, but speeds up builds by storing container images in
         # a GitHub package registry.
         githubToken: ${{ github.token }}
@@ -58,7 +58,10 @@ jobs:
         run: |
           uname -a
           apt update
-          apt install -y npm golang libpcap-dev
+          apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
+          wget https://go.dev/dl/go1.21.0.linux-arm64.tar.gz
+          rm -rf /usr/local/go
+          tar -C /usr/local -xzf go1.21.0.linux-arm64.tar.gz
           cd ui && npm install && npm run build
           pwd && cd ../ && make build-go
 
