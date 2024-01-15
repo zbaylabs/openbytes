@@ -12,18 +12,14 @@ jobs:
     permissions:
       contents: write
       packages: write
-
     steps:
     - uses: actions/checkout@v4
     - uses: uraimo/run-on-arch-action@v2
       name: Run commands
       id: runcmd
       with:
-        arch: aarch64
+        arch: amd64
         distro: ubuntu22.04
-        # Not required, but speeds up builds by storing container images in
-        # a GitHub package registry.
-        githubToken: ${{ github.token }}
         setup: |
           mkdir -p "${PWD}/artifacts"
         # Mount the artifacts directory as /artifacts in the container
@@ -43,14 +39,13 @@ jobs:
           cd ui && npm install && npm run build
           pwd && cd ../
           rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-          go build -ldflags='$(LD_FLAGS)' -o artifacts/$(SERVICE)-x86_64 *.go
+          go build -o artifacts/openbytes-x86_64 *.go
 
   build-arm64:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
-
     steps:
     - uses: actions/checkout@v4
     - name: version
@@ -84,11 +79,11 @@ jobs:
           cd ui && npm install && npm run build
           pwd && cd ../
           rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-          go build -ldflags='$(LD_FLAGS)' -o artifacts/$(SERVICE)-arm64 *.go
+          go build -o artifacts/openbytes-arm64 *.go
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
-        name: openbytes-${{ matrix.goarch }}
-        tag: ${{ matrix.goarch }}${{ env.FILE_DATE }}
+        name: openbytes
+        tag: ${{ env.FILE_DATE }}
         artifacts: "artifacts/*"
         token: ${{ secrets.GITHUB_TOKEN }}
