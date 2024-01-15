@@ -14,32 +14,21 @@ jobs:
       packages: write
     steps:
     - uses: actions/checkout@v4
-    - uses: uraimo/run-on-arch-action@v2
-      name: Run commands
-      id: runcmd
-      with:
-        arch: amd64
-        distro: ubuntu22.04
-        setup: |
-          mkdir -p "${PWD}/artifacts"
-        # Mount the artifacts directory as /artifacts in the container
-        dockerRunArgs: |
-          --volume "${PWD}/artifacts:/artifacts"
-          --volume "${GITHUB_WORKSPACE}:/source_code"
-        # Set an output parameter `uname` for use in subsequent steps
-        run: |
-          uname -a
-          apt update
-          apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
-          wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
-          rm -rf /usr/local/go
-          tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
-          export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
-          echo $PATH
-          cd ui && npm install && npm run build
-          pwd && cd ../
-          rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-          go build -o artifacts/openbytes-x86_64 *.go
+    - name: build
+      run: |
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        mkdir -p "${PWD}/artifacts"
+        apt update
+        apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
+        wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+        rm -rf /usr/local/go
+        tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+        export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
+        echo $PATH
+        cd ui && npm install && npm run build
+        pwd && cd ../
+        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+        go build -o artifacts/openbytes-x86_64 *.go
 
   build-arm64:
     runs-on: ubuntu-latest
