@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: build
       run: |
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        sudo echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
         sudo mkdir -p "${PWD}/artifacts"
         sudo apt update
         sudo apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
