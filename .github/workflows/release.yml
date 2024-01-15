@@ -28,6 +28,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        uname -a
         sudo apt install libpcap-dev 
         cd ui && npm install && npm run build
 
@@ -58,6 +59,7 @@ jobs:
           uname -a
           apt update
           apt install libpcap-dev -y
+          apt install npm -y
           cd ui && npm install && npm run build
           make build-go
 
