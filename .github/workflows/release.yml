@@ -43,15 +43,33 @@ jobs:
     #     pre_command: ""
     #     build_command: "make build-go"
 
-    - name: Run build
-      run: |
-        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        go build -o bundles/$(SERVICE)-${{ matrix.goarch }} *.go
-
-    - name: Create Release
-      uses: ncipollo/release-action@v1
+    - uses: uraimo/run-on-arch-action@v2
+      name: Run commands
+      id: runcmd
       with:
-        name: openbytes-${{ matrix.goarch }}
-        tag: ${{ matrix.goarch }}${{ env.FILE_DATE }}
-        artifacts: "bundles/*"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        arch: armv8
+        distro: ubuntu-22.04
+
+        # Not required, but speeds up builds by storing container images in
+        # a GitHub package registry.
+        githubToken: ${{ github.token }}
+
+        # Set an output parameter `uname` for use in subsequent steps
+        run: |
+          uname -a
+          sudo apt install libpcap-dev
+          cd ui && npm install && npm run build
+          make build-go
+
+    # - name: Run build
+    #   run: |
+    #     rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+    #     go build -o bundles/openbytes-${{ matrix.goos }}-${{ matrix.goarch }} *.go
+
+    # - name: Create Release
+    #   uses: ncipollo/release-action@v1
+    #   with:
+    #     name: openbytes-${{ matrix.goarch }}
+    #     tag: ${{ matrix.goarch }}${{ env.FILE_DATE }}
+    #     artifacts: "bundles/*"
+    #     token: ${{ secrets.GITHUB_TOKEN }}
