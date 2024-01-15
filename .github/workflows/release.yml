@@ -7,6 +7,44 @@ on:
  #   - cron: 0 16 4,9,14,19,24,28,31 * *
 
 jobs:
+  build-x86:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: uraimo/run-on-arch-action@v2
+      name: Run commands
+      id: runcmd
+      with:
+        arch: aarch64
+        distro: ubuntu22.04
+        # Not required, but speeds up builds by storing container images in
+        # a GitHub package registry.
+        githubToken: ${{ github.token }}
+        setup: |
+          mkdir -p "${PWD}/artifacts"
+        # Mount the artifacts directory as /artifacts in the container
+        dockerRunArgs: |
+          --volume "${PWD}/artifacts:/artifacts"
+          --volume "${GITHUB_WORKSPACE}:/source_code"
+        # Set an output parameter `uname` for use in subsequent steps
+        run: |
+          uname -a
+          apt update
+          apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
+          wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+          rm -rf /usr/local/go
+          tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+          export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
+          echo $PATH
+          cd ui && npm install && npm run build
+          pwd && cd ../
+          rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+          go build -ldflags='$(LD_FLAGS)' -o artifacts/$(SERVICE)-x86_64 *.go
+
   build-arm64:
     runs-on: ubuntu-latest
     permissions:
@@ -46,7 +84,7 @@ jobs:
           cd ui && npm install && npm run build
           pwd && cd ../
           rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-	        go build -ldflags='$(LD_FLAGS)' -o artifacts/$(SERVICE)-arm64 *.go
+          go build -ldflags='$(LD_FLAGS)' -o artifacts/$(SERVICE)-arm64 *.go
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
