@@ -1,4 +1,4 @@
-name: Makefile CI/CD
+name: release CI/CD
 
 on:
   repository_dispatch:
@@ -82,11 +82,6 @@ jobs:
           pwd && cd ../
           rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
 	        go build -ldflags='$(LD_FLAGS)' -o artifacts/$(SERVICE)-arm64 *.go
-    # - name: Run build
-    #   run: |
-    #     rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-    #     go build -o bundles/openbytes-${{ matrix.goos }}-${{ matrix.goarch }} *.go
-
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
