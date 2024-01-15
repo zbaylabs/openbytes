@@ -17,13 +17,13 @@ jobs:
     - name: build
       run: |
         sudo echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        sudo mkdir -p "${PWD}/artifacts"
+        mkdir -p "${PWD}/artifacts"
         sudo apt update
         sudo apt install --yes libpcap-dev
-        sudo cd ui && npm install && npm run build
-        sudo pwd && cd ../
-        sudo rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        sudo go build -o artifacts/openbytes-x86_64 *.go
+        cd ui && npm install && npm run build
+        pwd && cd ../
+        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+        go build -o artifacts/openbytes-x86_64 *.go
 
   build-arm64:
     runs-on: ubuntu-latest
