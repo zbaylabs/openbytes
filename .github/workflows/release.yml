@@ -53,6 +53,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: version
+      run: |
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
     - uses: uraimo/run-on-arch-action@v2
       name: Run commands
       id: runcmd
