@@ -56,6 +56,7 @@ jobs:
         # Set an output parameter `uname` for use in subsequent steps
         run: |
           uname -a
+          apt update
           apt install libpcap-dev
           cd ui && npm install && npm run build
           make build-go
