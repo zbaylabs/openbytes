@@ -61,8 +61,8 @@ jobs:
         name: artifact2
         path: bundles
 
-  build-macos-x86_64:
-    runs-on: macos-13-arm64
+  build-macos-arm64:
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
     - name: install dependencies
@@ -73,14 +73,14 @@ jobs:
         cd ui && npm install && npm run build
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        go build -o bundles/openbytes-darwin-x86_64 *.go
+        GOOS=darwin GOARCH=arm64 go build -o bundles/openbytes-darwin-arm64 *.go
     - uses: actions/upload-artifact@v4
       with:
         name: artifact3
         path: bundles
 
   release:
-    needs: [build-linux-x86_64, build-linux-arm64, build-macos-x86_64]
+    needs: [build-linux-x86_64, build-linux-arm64, build-macos-arm64]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
