@@ -46,7 +46,7 @@ jobs:
         run: |
           uname -a
           apt update
-          apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
+          apt install --yes npm libpcap-dev
           wget https://go.dev/dl/go1.21.6.linux-arm64.tar.gz
           rm -rf /usr/local/go
           tar -C /usr/local -xzf go1.21.6.linux-arm64.tar.gz
@@ -116,7 +116,7 @@ jobs:
     - name: release
       uses: ncipollo/release-action@v1
       with:
-        name: openbytes
+        name: openbytes${{ env.FILE_DATE }}
         tag: ${{ env.FILE_DATE }}
         artifacts: "bundles/**/*"
         token: ${{ secrets.GITHUB_TOKEN }}
