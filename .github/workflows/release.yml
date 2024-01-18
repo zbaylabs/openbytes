@@ -7,14 +7,19 @@ on:
  #   - cron: 0 16 4,9,14,19,24,28,31 * *
 
 jobs:
-  build-x86:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
     steps:
     - uses: actions/checkout@v4
-    - name: build
+
+    - name: version
+      run: |
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+    - name: build-x86
       run: |
         sudo echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
         mkdir -p "${PWD}/artifacts"
@@ -24,11 +29,9 @@ jobs:
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
         go build -o artifacts/openbytes-x86_64 *.go
-    - name: version
-      run: |
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
     - uses: uraimo/run-on-arch-action@v2
-      name: Run commands
+      name: build-arm64
       id: runcmd
       with:
         arch: aarch64
@@ -36,8 +39,8 @@ jobs:
         # Not required, but speeds up builds by storing container images in
         # a GitHub package registry.
         githubToken: ${{ github.token }}
-        # setup: |
-        #   mkdir -p "${PWD}/artifacts"
+        setup: |
+          mkdir -p "${PWD}/artifacts"
         # Mount the artifacts directory as /artifacts in the container
         dockerRunArgs: |
           --volume "${PWD}/artifacts:/artifacts"
@@ -56,7 +59,8 @@ jobs:
           pwd && cd ../
           rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
           go build -o artifacts/openbytes-arm64 *.go
-    - name: Create Release
+          
+    - name: release
       uses: ncipollo/release-action@v1
       with:
         name: openbytes
