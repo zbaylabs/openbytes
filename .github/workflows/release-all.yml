@@ -62,7 +62,7 @@ jobs:
         path: bundles
 
   build-macos-arm64:
-    runs-on: macos-latest-xlarge
+    runs-on: macos-latest-large
     steps:
     - uses: actions/checkout@v4
     - name: install dependencies
