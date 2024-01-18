@@ -7,7 +7,7 @@ on:
  #   - cron: 0 16 4,9,14,19,24,28,31 * *
 
 jobs:
-  build-x86:
+  build-linux-x86:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
         name: artifact1
         path: bundles
 
-  build-arm64:
+  build-linux-arm64:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
         name: artifact2
         path: bundles
 
-  build-macos:
+  build-macos-arm64:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
@@ -79,7 +79,7 @@ jobs:
         path: bundles
 
   release:
-    needs: [build-x86, build-arm64, build-macos]
+    needs: [build-linux-x86, build-linux-arm64, build-macos-arm64]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -95,5 +95,5 @@ jobs:
       with:
         name: openbytes
         tag: ${{ env.FILE_DATE }}
-        artifacts: "bundles/artifact*/*"
+        artifacts: "bundles/**/*"
         token: ${{ secrets.GITHUB_TOKEN }}
