@@ -26,7 +26,48 @@ jobs:
         go build -o bundles/openbytes-linux-x86_64 *.go
     - uses: actions/upload-artifact@v4
       with:
-        name: my-artifact1
+        name: artifact1
+        path: bundles
+
+  build-arm64:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: uraimo/run-on-arch-action@v2
+      name: build-arm64
+      id: runcmd
+      with:
+        arch: aarch64
+        distro: ubuntu22.04
+        # Not required, but speeds up builds by storing container images in
+        # a GitHub package registry.
+        githubToken: ${{ github.token }}
+        setup: |
+          mkdir -p "${PWD}/bundles"
+        # Mount the artifacts directory as /artifacts in the container
+        dockerRunArgs: |
+          --volume "${PWD}/bundles:/bundles"
+          --volume "${GITHUB_WORKSPACE}:/source_code"
+        # Set an output parameter `uname` for use in subsequent steps
+        run: |
+          uname -a
+          apt update
+          apt install --yes npm libpcap-dev wget git build-essential pkgconf libelf-dev llvm-12 clang-12  linux-tools-generic linux-tools-common
+          wget https://go.dev/dl/go1.21.0.linux-arm64.tar.gz
+          rm -rf /usr/local/go
+          tar -C /usr/local -xzf go1.21.0.linux-arm64.tar.gz
+          export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
+          echo $PATH
+          cd ui && npm install && npm run build
+          pwd && cd ../
+          rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+          go build -o bundles/openbytes-linux-arm64 *.go
+    - uses: actions/upload-artifact@v4
+      with:
+        name: artifact2
         path: bundles
 
   build-macos:
@@ -47,11 +88,11 @@ jobs:
         go build -o bundles/openbytes-darwin-arm64 *.go
     - uses: actions/upload-artifact@v4
       with:
-        name: my-artifact2
+        name: artifact3
         path: bundles
 
   release:
-    needs: [build-x86, build-macos]
+    needs: [build-x86, build-arm64, build-macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -70,5 +111,5 @@ jobs:
       with:
         name: openbytes
         tag: ${{ env.FILE_DATE }}
-        artifacts: "bundles/my-artifact1/*,bundles/my-artifact2/*"
+        artifacts: "bundles/artifact*/*"
         token: ${{ secrets.GITHUB_TOKEN }}
