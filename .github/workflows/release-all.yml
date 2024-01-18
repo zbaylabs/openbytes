@@ -120,5 +120,5 @@ jobs:
       with:
         name: openbytes${{ env.FILE_DATE }}
         tag: ${{ env.FILE_DATE }}
-        artifacts: "bundles/artifact*/*"
+        artifacts: "bundles/**/*"
         token: ${{ secrets.GITHUB_TOKEN }}
