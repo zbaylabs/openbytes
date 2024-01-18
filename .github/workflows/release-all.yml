@@ -71,13 +71,13 @@ jobs:
         wget https://go.dev/dl/go1.21.6.darwin-arm64.tar.gz
         sudo rm -rf /usr/local/go
         sudo tar -C /usr/local -xzf go1.21.6.darwin-arm64.tar.gz
-        export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
-        echo $PATH
     - name: build
       run: |
         cd ui && npm install && npm run build
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
+        export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
+        echo $PATH
         go build -o bundles/openbytes-darwin-arm64 *.go
     - uses: actions/upload-artifact@v4
       with:
