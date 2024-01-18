@@ -62,7 +62,7 @@ jobs:
         path: bundles
 
   build-macos-arm64:
-    runs-on: macos-latest
+    runs-on: flyci-macos-large-latest-m1
     steps:
     - uses: actions/checkout@v4
     - name: install dependencies
@@ -73,7 +73,7 @@ jobs:
         cd ui && npm install && npm run build
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        GOOS=darwin GOARCH=arm64 go build -o bundles/openbytes-darwin-arm64 *.go
+        go build -o bundles/openbytes-darwin-arm64 *.go
     - uses: actions/upload-artifact@v4
       with:
         name: artifact3
