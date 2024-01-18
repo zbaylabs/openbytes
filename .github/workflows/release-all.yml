@@ -9,12 +9,9 @@ on:
 jobs:
   build-x86:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
     - uses: actions/checkout@v4
-    - name: install depends
+    - name: install dependencies
       run: |
         sudo apt update
         sudo apt install --yes libpcap-dev
@@ -31,9 +28,6 @@ jobs:
 
   build-arm64:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
     - uses: actions/checkout@v4
     - uses: uraimo/run-on-arch-action@v2
@@ -42,16 +36,12 @@ jobs:
       with:
         arch: aarch64
         distro: ubuntu22.04
-        # Not required, but speeds up builds by storing container images in
-        # a GitHub package registry.
         githubToken: ${{ github.token }}
         setup: |
           mkdir -p "${PWD}/bundles"
-        # Mount the artifacts directory as /artifacts in the container
         dockerRunArgs: |
           --volume "${PWD}/bundles:/bundles"
           --volume "${GITHUB_WORKSPACE}:/source_code"
-        # Set an output parameter `uname` for use in subsequent steps
         run: |
           uname -a
           apt update
@@ -72,12 +62,9 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
     - uses: actions/checkout@v4
-    - name: install depends
+    - name: install dependencies
       run: |
         echo 'nice'
     - name: build
@@ -94,9 +81,6 @@ jobs:
   release:
     needs: [build-x86, build-arm64, build-macos]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
     - uses: actions/checkout@v4
     - uses: actions/download-artifact@v4
