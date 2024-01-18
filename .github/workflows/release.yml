@@ -28,7 +28,7 @@ jobs:
         cd ui && npm install && npm run build
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        go build -o artifacts/openbytes-x86_64 *.go
+        go build -o artifacts/openbytes-linux-x86_64 *.go
 
     - uses: uraimo/run-on-arch-action@v2
       name: build-arm64
@@ -58,8 +58,8 @@ jobs:
           cd ui && npm install && npm run build
           pwd && cd ../
           rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-          go build -o artifacts/openbytes-arm64 *.go
-          
+          go build -o artifacts/openbytes-linux-arm64 *.go
+
     - name: release
       uses: ncipollo/release-action@v1
       with:
