@@ -24,9 +24,8 @@ jobs:
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
         go build -o bundles/openbytes-linux-x86_64 *.go
-    - uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
         path: bundles
 
   build-macos:
@@ -45,9 +44,8 @@ jobs:
         pwd && cd ../
         rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
         go build -o bundles/openbytes-darwin-arm64 *.go
-    - uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
         path: bundles
 
   release:
@@ -58,9 +56,8 @@ jobs:
       packages: write
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v3
       with:
-        name: my-artifact
         path: bundles
     - name: version
       run: |
