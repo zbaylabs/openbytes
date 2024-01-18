@@ -13,6 +13,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: install dependencies
       run: |
+        uname -a
         sudo apt update
         sudo apt install --yes libpcap-dev
     - name: build
@@ -67,6 +68,7 @@ jobs:
     - name: install dependencies
       run: |
         echo 'nice'
+        uname -a
     - name: build
       run: |
         cd ui && npm install && npm run build
