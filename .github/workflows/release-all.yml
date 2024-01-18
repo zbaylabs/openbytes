@@ -1,4 +1,4 @@
-name: release CI/CD
+name: release-all CI/CD
 
 on:
   repository_dispatch:
@@ -51,6 +51,7 @@ jobs:
         path: bundles
 
   release:
+    needs: [build-x86, build-macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write
