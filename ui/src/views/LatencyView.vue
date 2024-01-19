@@ -87,21 +87,38 @@ onMounted(() => {
     // });
 
     chartData.value = {
-        labels: ['a.com/1', 'b.com/2', 'c.com/3', 'd.com/4', 'e.com/5'],
-        datasets: [
-            {
-                label: 'Top 5 latency',
-                data: [540, 325, 702, 620, 200],
-                backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'yellow'],
-                borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
-                borderWidth: 1
-            }
-        ]
+        labels: ['www.abc.com/1/1/1/1/api', 'b.com/2', 'c.com/3', 'd.com/4', 'e.com/5', 'f', 'g', 'h', 'i', 'www.j.com/j/jj/jjj/api'],
+        datasets: [{
+            label: 'Top 10 latency',
+            data: [85, 59, 80, 70, 56, 55, 40, 30, 20, 10],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)',
+                'yellow'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)',
+                'green'
+            ],
+            borderWidth: 1
+        }]
     };
 
     chartOptions.value = {
         animation: false,
-        responsive: true
+        responsive: true,
+        indexAxis: 'y',
     };
 });
 </script>
