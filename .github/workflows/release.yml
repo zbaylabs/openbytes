@@ -18,10 +18,9 @@ jobs:
         sudo apt install --yes libpcap-dev
     - name: build
       run: |
-        cd ui && npm install && npm run build
-        pwd && cd ../
-        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        go build -o bundles/openbytes-linux-x86_64 *.go
+        make build-ui build-go
+        tar -cvf bundles/openbytes-linux-x86_64.tar.gz bundles/*
+        rm -rf bundles/openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact1

@@ -87,12 +87,12 @@ onMounted(() => {
     // });
 
     chartData.value = {
-        labels: ['a.com/1', 'b.com/2', 'c.com/3', 'd.com/4','e.com/5'],
+        labels: ['a.com/1', 'b.com/2', 'c.com/3', 'd.com/4', 'e.com/5'],
         datasets: [
             {
                 label: 'Top 5 latency',
-                data: [540, 325, 702, 620,200],
-                backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)','yellow'],
+                data: [540, 325, 702, 620, 200],
+                backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'yellow'],
                 borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
                 borderWidth: 1
             }
