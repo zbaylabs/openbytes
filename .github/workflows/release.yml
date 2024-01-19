@@ -20,7 +20,7 @@ jobs:
     - name: build
       run: |
         make build-ui build-go
-        cd bundles && tar -zcvf --remove-files openbytes-linux-x86_64.tar.gz openbytes
+        cd bundles && tar zcvf openbytes-linux-x86_64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact1
