@@ -50,7 +50,6 @@ jobs:
           rm -rf /usr/local/go
           tar -C /usr/local -xzf go1.21.6.linux-arm64.tar.gz
           export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
-          echo $PATH
           cd ui && npm install
           cd ../ && make build-ui build-go
           cd bundles && tar zcvf openbytes-linux-arm64.tar.gz --remove-files openbytes
@@ -89,6 +88,7 @@ jobs:
         cd ui && npm install
     - name: build
       run: |
+        export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
         make build-ui build-go
         cd bundles && tar zcvf openbytes-linux-darwin-arm64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
