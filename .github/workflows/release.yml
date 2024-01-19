@@ -69,7 +69,7 @@ jobs:
     - name: build
       run: |
         make build-ui build-go
-        cd bundles && tar zcvf openbytes-linux-darwin-x86_64.tar.gz openbytes && rm -rf openbytes
+        cd bundles && tar zcvf openbytes-darwin-x86_64.tar.gz openbytes && rm -rf openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact3
@@ -90,7 +90,7 @@ jobs:
       run: |
         export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
         make build-ui build-go
-        cd bundles && tar zcvf openbytes-linux-darwin-arm64.tar.gz openbytes && rm -rf openbytes
+        cd bundles && tar zcvf openbytes-darwin-arm64.tar.gz openbytes && rm -rf openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact4
