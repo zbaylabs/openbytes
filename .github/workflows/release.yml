@@ -52,7 +52,7 @@ jobs:
           export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
           echo $PATH
           cd ui && npm install
-          make build-ui build-go
+          cd ../ && make build-ui build-go
           cd bundles && tar zcvf openbytes-linux-arm64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
       with:
@@ -66,9 +66,9 @@ jobs:
     - name: install dependencies
       run: |
         uname -a
+        cd ui && npm install
     - name: build
       run: |
-        cd ui && npm install
         make build-ui build-go
         cd bundles && tar zcvf openbytes-linux-darwin-x86_64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
@@ -86,9 +86,9 @@ jobs:
         wget https://go.dev/dl/go1.21.6.darwin-arm64.tar.gz
         sudo rm -rf /usr/local/go
         sudo tar -C /usr/local -xzf go1.21.6.darwin-arm64.tar.gz
+        cd ui && npm install
     - name: build
       run: |
-        cd ui && npm install
         make build-ui build-go
         cd bundles && tar zcvf openbytes-linux-darwin-arm64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
