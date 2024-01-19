@@ -24,6 +24,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/mirror',
     name: 'mirror',
     component: () => import('../views/MirrorView.vue')
+  },
+  {
+    path: '/latency',
+    name: 'latency',
+    component: () => import('../views/LatencyView.vue')
   }
 ]
 

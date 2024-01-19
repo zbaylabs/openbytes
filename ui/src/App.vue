@@ -26,7 +26,7 @@
             </q-item>
             <q-item clickable v-ripple>
               <q-item-section>
-                <router-link to="/" style="padding-left: 6px;">Latency</router-link>
+                <router-link to="/latency" style="padding-left: 6px;">Latency</router-link>
               </q-item-section>
             </q-item>
           </q-expansion-item>
