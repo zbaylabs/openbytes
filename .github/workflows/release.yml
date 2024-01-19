@@ -18,6 +18,7 @@ jobs:
         sudo apt install --yes libpcap-dev
     - name: build
       run: |
+        cd ui && npm install
         make build-ui build-go
         tar -cvf --remove-files bundles/openbytes-linux-x86_64.tar.gz bundles/openbytes
     - uses: actions/upload-artifact@v4
