@@ -18,17 +18,17 @@
       <!-- drawer content -->
       <div class="q-pa-md">
         <q-list>
-          <q-expansion-item group="somegroup" label="Dashboard" default-opened header-class="text-primary">
+          <q-expansion-item group="somegroup" label="Analyze" default-opened header-class="text-primary">
             <q-item clickable v-ripple>
               <q-item-section>
                 <router-link to="/" style="padding-left: 6px;">Traffic</router-link>
               </q-item-section>
             </q-item>
-            <!-- <q-item clickable v-ripple>
+            <q-item clickable v-ripple>
               <q-item-section>
                 <router-link to="/" style="padding-left: 6px;">Latency</router-link>
               </q-item-section>
-            </q-item> -->
+            </q-item>
           </q-expansion-item>
 
           <q-separator />
