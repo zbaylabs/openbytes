@@ -51,10 +51,9 @@ jobs:
           tar -C /usr/local -xzf go1.21.6.linux-arm64.tar.gz
           export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
           echo $PATH
-          cd ui && npm install && npm run build
-          pwd && cd ../
-          rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-          go build -o bundles/openbytes-linux-arm64 *.go
+          cd ui && npm install
+          make build-ui build-go
+          cd bundles && tar zcvf openbytes-linux-arm64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact2
@@ -69,10 +68,9 @@ jobs:
         uname -a
     - name: build
       run: |
-        cd ui && npm install && npm run build
-        pwd && cd ../
-        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        go build -o bundles/openbytes-darwin-x86_64 *.go
+        cd ui && npm install
+        make build-ui build-go
+        cd bundles && tar zcvf openbytes-linux-darwin-x86_64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact3
@@ -90,12 +88,9 @@ jobs:
         sudo tar -C /usr/local -xzf go1.21.6.darwin-arm64.tar.gz
     - name: build
       run: |
-        cd ui && npm install && npm run build
-        pwd && cd ../
-        rm -rf cmd/dist && cp -rf ui/dist cmd/ && rm -rf cmd/dist/js/*.map
-        export PATH=/usr/local/go/bin:$PATH:/usr/local/bin
-        echo $PATH
-        go build -o bundles/openbytes-darwin-arm64 *.go
+        cd ui && npm install
+        make build-ui build-go
+        cd bundles && tar zcvf openbytes-linux-darwin-arm64.tar.gz --remove-files openbytes
     - uses: actions/upload-artifact@v4
       with:
         name: artifact4
